@@ -7,10 +7,10 @@ Gem::Specification.new do |gem|
   gem.name          = "authrocket"
   gem.version       = AuthRocket::VERSION
   gem.authors       = ["thomas morgan"]
-  gem.email         = ["tm@notioneer.com"]
+  gem.email         = ["hello@authrocket.com"]
   gem.description   = %q{AuthRocket client for Ruby.}
   gem.summary       = %q{AuthRocket client for Ruby}
-  gem.homepage      = "https://github.com/authrocket/authrocket-ruby"
+  gem.homepage      = 'https://authrocket.com/'
   gem.license       = 'MIT'
 
   gem.files         = `git ls-files`.split($/)

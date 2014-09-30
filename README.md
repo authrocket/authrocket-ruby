@@ -53,7 +53,7 @@ Let's add a couple methods to your Application Controller, substituting the corr
 
       private
 
-      LOGIN_URL = 'https://sample.e1.loginrocket.com/
+      LOGIN_URL = 'https://sample.e1.loginrocket.com/'
       # This should be your app's own LoginRocket URL, as
       #   shown in the Login Policy details.
 
