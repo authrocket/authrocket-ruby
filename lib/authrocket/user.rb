@@ -9,7 +9,8 @@ module AuthRocket
     attr :user_type, :username, :state, :reference
     attr :first_name, :last_name, :password, :password_confirmation
     attr :name, :api_key, :email
-    attr_datetime :created_at, :last_login_on
+    attr_datetime :created_at, :last_login_at
+    attr_datetime :last_login_on # deprecated
 
 
     def orgs
