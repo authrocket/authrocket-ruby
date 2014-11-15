@@ -6,9 +6,9 @@ module AuthRocket
     has_many :events
     has_many :memberships
 
-    attr :user_type, :username, :state, :reference
-    attr :first_name, :last_name, :password, :password_confirmation
-    attr :name, :api_key, :email
+    attr :api_key, :custom, :email, :first_name
+    attr :last_name, :name, :password, :password_confirmation
+    attr :reference, :state, :user_type, :username
     attr_datetime :created_at, :last_login_at
     attr_datetime :last_login_on # deprecated
 

@@ -8,8 +8,8 @@ module AuthRocket
     has_many :orgs
     has_many :users
 
-    attr :api_key_policy, :api_key_prefix, :name, :require_unique_emails, :state
-    attr :username_validation_human
+    attr :api_key_policy, :api_key_prefix, :custom, :name
+    attr :require_unique_emails, :state, :username_validation_human
 
 
     def reset!(params={})

@@ -6,7 +6,7 @@ module AuthRocket
     has_many :events
     has_many :memberships
 
-    attr :realm_id, :name, :state, :reference
+    attr :custom, :name, :reference, :state
     attr_datetime :created_at
 
 
