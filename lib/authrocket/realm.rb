@@ -3,6 +3,7 @@ module AuthRocket
     crud :all, :find, :create, :update, :delete
 
     has_many :app_hooks
+    has_many :auth_providers
     has_many :events
     has_many :login_policies
     has_many :orgs

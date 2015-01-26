@@ -2,6 +2,8 @@
 
 - Add Credential resource
 - Deprecate User#api_key - Replaced by Credential#api_key
+- Add AuthProvider resource
+- Deprecate LoginPolicy#enable_logins, #enable_signups, and #name_field - Replaced by AuthProvider#login, #signup, and #name_field where #provider_type is 'login_rocket'
 
 #### 1.1.0
 
