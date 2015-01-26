@@ -1,3 +1,8 @@
+#### 1.2.0
+
+- Add Credential resource
+- Deprecate User#api_key - Replaced by Credential#api_key
+
 #### 1.1.0
 
 - Add custom attributes for Membership, Org, Realm, User

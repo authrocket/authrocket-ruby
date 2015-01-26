@@ -3,15 +3,22 @@ module AuthRocket
     crud :all, :find, :create, :update, :delete
 
     belongs_to :realm
+    has_many :credentials
     has_many :events
     has_many :memberships
 
-    attr :api_key, :custom, :email, :first_name
+    attr :api_key # deprecated
+    attr :custom, :email, :first_name
     attr :last_name, :name, :password, :password_confirmation
     attr :reference, :state, :user_type, :username
     attr_datetime :created_at, :last_login_at
     attr_datetime :last_login_on # deprecated
 
+
+    def credentials
+      reload unless @attribs[:credentials]
+      @attribs[:credentials]
+    end
 
     def orgs
       memberships.map(&:org).compact
