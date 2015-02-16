@@ -1,10 +1,11 @@
 require 'ncore'
+require 'jwt'
 
-%w(version api_config).each do |f|
+%w(version client api_config).each do |f|
   require "authrocket/api/#{f}"
 end
 
-%w(app_hook auth_provider credential event login_policy membership org realm user user_token).each do |f|
+%w(app_hook auth_provider credential event login_policy membership org realm session user user_token).each do |f|
   require "authrocket/#{f}"
 end
 

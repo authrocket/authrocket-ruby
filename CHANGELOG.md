@@ -1,3 +1,7 @@
+#### 1.3.0
+- Add Session resource
+- Deprecate Event.validate_token - Replaced by Session.from_token and Session.find.
+
 #### 1.2.0
 
 - Add Credential resource

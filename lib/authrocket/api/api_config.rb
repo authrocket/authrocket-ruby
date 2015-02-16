@@ -1,5 +1,7 @@
 module AuthRocket
   include NCore::Builder
+  Resource.include AuthRocket::Client
+  SingletonResource.include AuthRocket::Client
 
   configure do
     self.default_url = ENV['AUTHROCKET_URL']
@@ -16,7 +18,8 @@ module AuthRocket
       self.credentials = {
         api_key: ENV['AUTHROCKET_API_KEY'],
         account: ENV['AUTHROCKET_ACCOUNT'],
-        realm:   ENV['AUTHROCKET_REALM']
+        realm:   ENV['AUTHROCKET_REALM'],
+        jwt_secret: ENV['AUTHROCKET_JWT_SECRET']
       }
     end
 
@@ -52,6 +55,8 @@ module AuthRocket
           o = {}
           [url.password, url.user].each do |part|
             case part
+            when /^jsk_/
+              o[:jwt_secret] = part
             when /^key_/
               o[:api_key] = part
             when /^org_/

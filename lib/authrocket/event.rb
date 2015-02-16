@@ -13,6 +13,7 @@ module AuthRocket
     attr_datetime :event_at
 
 
+    # deprecated - use Session.from_token() or Session.find()
     def self.validate_token(token, params={}, api_creds=nil)
       parsed, creds = request(:get, "#{url}/login/#{CGI.escape token}", api_creds, params)
       new(parsed, creds)

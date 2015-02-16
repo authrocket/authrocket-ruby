@@ -6,6 +6,7 @@ module AuthRocket
     has_many :credentials
     has_many :events
     has_many :memberships
+    has_many :sessions
 
     attr :api_key # deprecated
     attr :custom, :email, :first_name

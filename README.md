@@ -14,14 +14,17 @@ For installation, add `gem 'authrocket'` to your Gemfile. More details are below
 
 By default, AuthRocket automatically loads your credentials from environment variables. For such hosting environments, including Heroku, just configure these:
 
-    AUTHROCKET_ACCOUNT = org_SAMPLE
-    AUTHROCKET_API_KEY = key_SAMPLE
-    AUTHROCKET_URL     = https://api-e1.authrocket.com/v1
-    AUTHROCKET_REALM   = rl_SAMPLE   # optional
+    AUTHROCKET_ACCOUNT    = org_SAMPLE
+    AUTHROCKET_API_KEY    = key_SAMPLE
+    AUTHROCKET_URL        = https://api-e1.authrocket.com/v1
+    AUTHROCKET_REALM      = rl_SAMPLE   # optional
+    AUTHROCKET_JWT_SECRET = jsk_SAMPLE  # optional
 
 `AUTHROCKET_URL` must be updated based on what cluster your account is provisioned on.
 
 `AUTHROCKET_REALM` is optional. If you're using a single Realm, it's easiest to add it here as an application-wide default. If you're using multiple Realms with your app, we recommend leaving it out here and setting it as you go.
+
+`AUTHROCKET_JWT_SECRET` is optional. It only should be included if you've also specified a single realm via AUTHROCKET_REALM *and* you're using hosted logins or authrocket.js. The tokens returned by both are JWT-compatible and can be verified in-app using a matching secret.
 
 It's possible to configure AuthRocket using a Rails initializer (or other initializaiton code) too.
 
@@ -29,7 +32,8 @@ It's possible to configure AuthRocket using a Rails initializer (or other initia
       account: 'org_SAMPLE',
       api_key: 'key_SAMPLE',
       url: 'https://api-e1.authrocket.com/v1',
-      realm: 'rl_SAMPLE'
+      realm: 'rl_SAMPLE',
+      jwt_secret: 'jsk_SAMPLE'
     }
 
 
@@ -58,18 +62,15 @@ Let's add a couple methods to your Application Controller, substituting the corr
       #   shown in the Login Policy details.
 
       def require_user
-        unless session[:ar_user_id]
+        unless current_user
           flash.keep
           redirect_to LOGIN_URL
         end
       end
 
+      helper_method :current_user
       def current_user
-        @_current_user ||= session[:ar_user_id] && AuthRocket::User.find(session[:ar_user_id])
-      end
-
-      def current_user_name
-        session[:name]
+        @_current_user ||= AuthRocket::Session.from_token(session[:ar_token]).try(:user)
       end
     end
 
@@ -85,10 +86,8 @@ Then add login and logout methods:
       def login
         flash.keep
         if params[:token]
-          if login_rec = AuthRocket::Event.validate_token(params[:token])
-            user = login_rec.user
-            session[:ar_user_id] = user.id
-            session[:name] = user.name
+          if AuthRocket::Session.from_token(params[:token], within: 60.seconds)
+            session[:ar_token] = params[:token]
             redirect_to root_path
             return
           end
@@ -97,7 +96,7 @@ Then add login and logout methods:
       end
 
       def logout
-        session[:ar_user_id] = nil
+        session[:ar_token] = nil
         redirect_to root_path, notice: 'You have been logged out.'
       end
     end
