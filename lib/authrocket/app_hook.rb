@@ -16,6 +16,7 @@ module AuthRocket
           org.*  org.created  org.updated  org.deleted
           membership.*  membership.created  membership.updated  membership.deleted
           app_hook.*  app_hook.created  app_hook.updated  app_hook.deleted
+          auth_provider.* auth_provider.created auth_provider.updated auth_provider.deleted
           login_policy.*  login_policy.created  login_policy.updated  login_policy.deleted
         ).sort
     end

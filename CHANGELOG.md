@@ -1,6 +1,7 @@
 #### 1.3.0
 - Add Session resource
-- Deprecate Event.validate_token - Replaced by Session.from_token and Session.find.
+- Deprecate Event.validate_token - Replaced by Session.from_token and Session.find
+- Add missing auth_provider.* events
 
 #### 1.2.0
 
