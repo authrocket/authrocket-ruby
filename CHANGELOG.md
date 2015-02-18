@@ -1,3 +1,6 @@
+#### 1.3.1
+- Add Realm#api_key_minutes
+
 #### 1.3.0
 - Add Session resource
 - Deprecate Event.validate_token - Replaced by Session.from_token and Session.find
