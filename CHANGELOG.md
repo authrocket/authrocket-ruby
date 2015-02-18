@@ -1,5 +1,6 @@
 #### 1.3.1
 - Add Realm#api_key_minutes
+- Add Session#client
 
 #### 1.3.0
 - Add Session resource

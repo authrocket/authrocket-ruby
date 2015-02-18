@@ -4,7 +4,7 @@ module AuthRocket
 
     belongs_to :user
 
-    attr :ip
+    attr :client, :ip
     attr :token # readonly
     attr_datetime :created_at, :expires_at # readonly
 
