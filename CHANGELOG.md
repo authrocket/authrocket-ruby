@@ -1,3 +1,6 @@
+#### 1.4.0
+- Support social auth in AuthProvider and Credential.
+
 #### 1.3.1
 - Add Realm#api_key_minutes
 - Add Session#client
