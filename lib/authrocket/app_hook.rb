@@ -5,19 +5,19 @@ module AuthRocket
     belongs_to :realm
     has_many :events
 
-    attr :event_type, :hook_type, :destination, :email_from, :user_type, :email_subject, :email_template
+    attr :event_type, :hook_type, :destination
+    attr :email_from, :email_subject, :email_template, :email_to, :user_type
 
     def self.event_types
-      %w( *
-          realm.*  realm.created  realm.updated  realm.deleted
-          user.*  user.created  user.updated  user.deleted
-            user.login.*  user.login.succeeded  user.login.failed
-            user.password_token.*  user.password_token.created  user.password_token.consumed  user.password_token.failed
-          org.*  org.created  org.updated  org.deleted
-          membership.*  membership.created  membership.updated  membership.deleted
-          app_hook.*  app_hook.created  app_hook.updated  app_hook.deleted
-          auth_provider.* auth_provider.created auth_provider.updated auth_provider.deleted
-          login_policy.*  login_policy.created  login_policy.updated  login_policy.deleted
+      %w( app_hook.created  app_hook.updated  app_hook.deleted
+          auth_provider.created auth_provider.updated auth_provider.deleted
+          login_policy.created  login_policy.updated  login_policy.deleted
+          membership.created  membership.updated  membership.deleted
+          org.created  org.updated  org.deleted
+          realm.created  realm.updated  realm.deleted
+          user.created  user.updated  user.deleted
+            user.login.succeeded  user.login.failed
+            user.password_token.created  user.password_token.consumed  user.password_token.failed
         ).sort
     end
 
