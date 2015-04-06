@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency 'ncore', '~> 1.2'
-  gem.add_dependency 'jwt', '~> 1.2.0'
+  gem.add_dependency 'jwt', '~> 1.4.0'
 
   gem.add_development_dependency "bundler", "~> 1.3"
   gem.add_development_dependency "rake"

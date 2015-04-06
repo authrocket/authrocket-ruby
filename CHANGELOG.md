@@ -1,3 +1,6 @@
+#### 1.4.1
+- Bump to jwt 1.4
+
 #### 1.4.0
 - Support social auth in AuthProvider and Credential.
 
