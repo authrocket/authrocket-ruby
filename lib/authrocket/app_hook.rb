@@ -6,7 +6,7 @@ module AuthRocket
     has_many :events
 
     attr :event_type, :hook_type, :destination
-    attr :email_from, :email_subject, :email_template, :email_to, :user_type
+    attr :email_from, :email_renderer, :email_subject, :email_template, :email_to, :user_type
 
     def self.event_types
       %w( app_hook.created  app_hook.updated  app_hook.deleted

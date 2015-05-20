@@ -1,3 +1,6 @@
+#### 1.4.2
+- Add AppHook.email_renderer
+
 #### 1.4.1
 - Bump to jwt 1.4
 - Add AppHook.email_to
