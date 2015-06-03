@@ -1,3 +1,6 @@
+#### 1.4.3
+- Add AuthProvider.min_length
+
 #### 1.4.2
 - Add AppHook.email_renderer
 
