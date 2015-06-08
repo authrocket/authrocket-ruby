@@ -14,7 +14,7 @@ module AuthRocket
       raise Error, "missing :jwt_secret (or AUTHROCKET_JWT_SECRET)" unless secret
       return unless token
 
-      jwt, _ = JWT.decode token, secret
+      jwt, _ = JWT.decode token, secret, true, algorithm: 'HS256'
 
       if within = options.delete(:within)
         return if jwt['iat'] < Time.now.to_i - within
@@ -48,7 +48,7 @@ module AuthRocket
         }, api_creds)
       
       session
-    rescue JWT::DecodeError, JWT::ExpiredSignature
+    rescue JWT::DecodeError
       nil
     end
 

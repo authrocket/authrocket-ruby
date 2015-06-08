@@ -1,3 +1,7 @@
+#### 1.4.4
+- Bump to jwt 1.5
+- Enforce hmac algorithm for jwt
+
 #### 1.4.3
 - Add AuthProvider.min_length
 
