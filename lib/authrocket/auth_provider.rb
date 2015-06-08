@@ -6,7 +6,7 @@ module AuthRocket
 
     attr :provider_type, :state
     attr :login, :name_field, :signup
-    attr :min_length
+    attr :min_complexity, :min_length, :required_chars
     attr :client_id, :client_secret, :scopes
 
 
