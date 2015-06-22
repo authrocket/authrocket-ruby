@@ -1,3 +1,6 @@
+#### 1.5.0
+- Update Event and add Notification
+
 #### 1.4.4
 - Bump to jwt 1.5
 - Enforce hmac algorithm for jwt
@@ -15,7 +18,7 @@
 - Update AppHook.event_types
 
 #### 1.4.0
-- Support social auth in AuthProvider and Credential.
+- Support social auth in AuthProvider and Credential
 
 #### 1.3.1
 - Add Realm#api_key_minutes
@@ -37,11 +40,9 @@
 
 - Add custom attributes for Membership, Org, Realm, User
 
-
 #### 1.0.1
 
 - Change User#last_login_on -> #last_login_at
-
 
 #### 1.0.0
 
