@@ -12,8 +12,9 @@ module AuthRocket
 
     # attribs - :redirect_uri - required
     #         - :nonce        - optional
-    def self.authorize_urls(attribs={}, api_creds=nil)
-      parsed, creds = request(:get, url+'/authorize', api_creds, attribs)
+    def self.authorize_urls(attribs={})
+      params = parse_request_params(attribs)
+      parsed, creds = request(:get, url+'/authorize', params)
       if parsed[:errors].any?
         raise Error, parsed[:errors].inspect
       end
@@ -27,8 +28,9 @@ module AuthRocket
 
     # attribs - :redirect_uri - required
     #         - :nonce        - optional
-    def self.authorize_url(auth_provider_id, attribs={}, api_creds=nil)
-      parsed, creds = request(:get, url+"/#{auth_provider_id}/authorize", api_creds, attribs)
+    def self.authorize_url(auth_provider_id, attribs={})
+      params = parse_request_params(attribs)
+      parsed, creds = request(:get, url+"/#{auth_provider_id}/authorize", params)
       if parsed[:errors].any?
         raise Error, parsed[:errors].inspect
       end
@@ -37,15 +39,17 @@ module AuthRocket
 
     # same as self.authorize_url(self.id, ...)
     def authorize_url(attribs={})
-      self.class.authorize_url(id, attribs, api_creds)
+      params = parse_request_params(attribs).merge credentials: api_creds
+      self.class.authorize_url(id, params)
     end
 
     # attribs - :code  - required
     #         - :nonce - optional
     #         - :state - required
     # always returns a new object; check .errors? or .valid? to see how it went
-    def self.authorize(attribs={}, api_creds=nil)
-      parsed, creds = request(:post, url+'/authorize', api_creds, attribs)
+    def self.authorize(attribs={})
+      params = parse_request_params(attribs)
+      parsed, creds = request(:post, url+'/authorize', params)
       User.new(parsed, creds)
     end
 

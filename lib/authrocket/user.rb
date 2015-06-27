@@ -35,35 +35,38 @@ module AuthRocket
 
     class << self
 
-      def authenticate(username, password, params={}, api_creds=nil)
-        params = params.merge(password: password)
-        parsed, creds = request(:post, "#{url}/#{CGI.escape username}/authenticate", api_creds, params)
+      def authenticate(username, password, params={})
+        params = parse_request_params(params).merge password: password
+        parsed, creds = request(:post, "#{url}/#{CGI.escape username}/authenticate", params)
         if parsed[:errors].any?
           raise ValidationError, parsed[:errors]
         end
         new(parsed, creds)
       end
 
-      def authenticate_key(api_key, params={}, api_creds=nil)
-        params = params.merge(api_key: api_key)
-        parsed, creds = request(:post, "#{url}/authenticate_key", api_creds, params)
+      def authenticate_key(api_key, params={})
+        params = parse_request_params(params).merge api_key: api_key
+        parsed, creds = request(:post, "#{url}/authenticate_key", params)
         if parsed[:errors].any?
           raise ValidationError, parsed[:errors]
         end
         new(parsed, creds)
       end
 
-      def generate_password_token(username, params={}, api_creds=nil)
-        parsed, creds = request(:post, "#{url}/#{CGI.escape username}/generate_password_token", api_creds, params)
+      def generate_password_token(username, params={})
+        params = parse_request_params(params)
+        parsed, creds = request(:post, "#{url}/#{CGI.escape username}/generate_password_token", params)
         if parsed[:errors].any?
           raise ValidationError, parsed[:errors]
         end
         new(parsed, creds)
       end
 
-      def reset_password_with_token(username, token, new_pw, new_pw_2, params={}, api_creds=nil)
-        params = params.with_indifferent_access.merge(user: {token: token, password: new_pw, password_confirmation: new_pw_2})
-        parsed, creds = request(:post, "#{url}/#{CGI.escape username}/reset_password_with_token", api_creds, params)
+      # params - {username: '...', token: '...', password: '...', password_confirmation: '...'}
+      def reset_password_with_token(params)
+        params = parse_request_params(params, json_root: json_root)
+        username = params[json_root].delete(:username) || '--'
+        parsed, creds = request(:post, "#{url}/#{CGI.escape username}/reset_password_with_token", params)
         if parsed[:errors].any?
           raise ValidationError, parsed[:errors]
         end
@@ -74,8 +77,8 @@ module AuthRocket
 
     # params - {current_password: 'old', password: 'new', password_confirmation: 'new'}
     def update_password(params)
-      params = {user: params}
-      parsed, _ = request(:put, "#{url}/update_password", api_creds, params)
+      params = parse_request_params(params, json_root: json_root).merge credentials: api_creds
+      parsed, _ = request(:put, "#{url}/update_password", params)
       load(parsed)
       errors.empty? ? self : false
     end

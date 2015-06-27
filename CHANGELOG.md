@@ -1,20 +1,33 @@
+#### 2.0.0.pre1
+- NOTE: This version includes breaking changes.
+- Depends on ncore 2.0
+  - ncore update changes most method signatures to remove the final api_creds param - use a :credentials key instead:
+      Old: User.create(params, api_creds)
+      New: User.create(params.merge(credentials: api_creds))
+    - As api_creds is not generally needed, this should affect few people
+  - No longer depends on 'multi_json', but uses it if available. Defaults to stdlib 'json'.
+  - find(nil) now raises RecordNotFound instead of returning nil
+- User.reset_password_with_token signature change:
+  Old: reset_password_with_token(username, token, new_pw, new_pw_2, params={}, api_creds)
+  New: reset_password_with_token(username: '...', token: '...', password: '...', password_confirmation: '...', ...)
+
 #### 1.5.0
 - Update Event and add Notification
 
 #### 1.4.4
 - Bump to jwt 1.5
 - Enforce hmac algorithm for jwt
-- Add AuthProvider.min_complexity, .required_chars
+- Add AuthProvider#min_complexity, #required_chars
 
 #### 1.4.3
-- Add AuthProvider.min_length
+- Add AuthProvider#min_length
 
 #### 1.4.2
-- Add AppHook.email_renderer
+- Add AppHook#email_renderer
 
 #### 1.4.1
 - Bump to jwt 1.4
-- Add AppHook.email_to
+- Add AppHook#email_to
 - Update AppHook.event_types
 
 #### 1.4.0

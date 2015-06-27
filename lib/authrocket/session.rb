@@ -9,8 +9,8 @@ module AuthRocket
     attr_datetime :created_at, :expires_at # readonly
 
     # options - :within - (in seconds) Maximum time since the token was originally issued
-    def self.from_token(token, options={}, api_creds=nil)
-      secret = (api_creds||credentials)[:jwt_secret]
+    def self.from_token(token, options={})
+      secret = (options[:credentials]||credentials)[:jwt_secret]
       raise Error, "missing :jwt_secret (or AUTHROCKET_JWT_SECRET)" unless secret
       return unless token
 
@@ -37,7 +37,7 @@ module AuthRocket
               }),
             })
           end,
-        }, api_creds)
+        }, options[:credentials])
       session = new({
           id: jwt['tk'],
           created_at: jwt['iat'],
@@ -45,7 +45,7 @@ module AuthRocket
           token: token,
           user_id: jwt['uid'],
           user: user
-        }, api_creds)
+        }, options[:credentials])
       
       session
     rescue JWT::DecodeError
