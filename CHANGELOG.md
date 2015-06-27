@@ -13,6 +13,8 @@
 - Remove previously deprecated Event.validate_token
 - Remove previously deprecated LoginPolicy#enable_logins, #enable_signups, #name_field
 - Remove previously deprecated User#api_key, #last_login_on
+- Add Event#request_data, Session#request_data
+- Remove Event#ip, Session#ip, and Session#client - use #request_data['ip'] or #request_data['client'] instead
 
 #### 1.5.0
 - Update Event and add Notification

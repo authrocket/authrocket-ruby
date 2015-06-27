@@ -4,9 +4,13 @@ module AuthRocket
 
     belongs_to :user
 
-    attr :client, :ip
     attr :token # readonly
     attr_datetime :created_at, :expires_at # readonly
+
+    def request_data
+      self[:request]
+    end
+
 
     # options - :within - (in seconds) Maximum time since the token was originally issued
     def self.from_token(token, options={})

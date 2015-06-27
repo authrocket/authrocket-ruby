@@ -11,9 +11,12 @@ module AuthRocket
     belongs_to :user
     has_many :notifications
 
-    attr :event_type, :ip
+    attr :event_type
     attr_datetime :event_at
 
+    def request_data
+      self[:request]
+    end
 
 
     def notifications
