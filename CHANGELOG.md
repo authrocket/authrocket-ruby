@@ -10,6 +10,9 @@
 - User.reset_password_with_token signature change:
   Old: reset_password_with_token(username, token, new_pw, new_pw_2, params={}, api_creds)
   New: reset_password_with_token(username: '...', token: '...', password: '...', password_confirmation: '...', ...)
+- Remove previously deprecated Event.validate_token
+- Remove previously deprecated LoginPolicy#enable_logins, #enable_signups, #name_field
+- Remove previously deprecated User#api_key, #last_login_on
 
 #### 1.5.0
 - Update Event and add Notification

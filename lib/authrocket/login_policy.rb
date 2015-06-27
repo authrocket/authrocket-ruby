@@ -8,7 +8,6 @@ module AuthRocket
     attr :custom_domains, :external_css
     attr :footer, :header, :login_handler, :name, :primary_domain
     attr :signup_handler, :subdomain
-    attr :enable_logins, :enable_signups, :name_field # deprecated
     attr :base_domain, :domains # readonly
 
   end

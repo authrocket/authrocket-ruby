@@ -8,12 +8,10 @@ module AuthRocket
     has_many :memberships
     has_many :sessions
 
-    attr :api_key # deprecated
     attr :custom, :email, :first_name
     attr :last_name, :name, :password, :password_confirmation
     attr :reference, :state, :user_type, :username
     attr_datetime :created_at, :last_login_at
-    attr_datetime :last_login_on # deprecated
 
 
     def credentials
