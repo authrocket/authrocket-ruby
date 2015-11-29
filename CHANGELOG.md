@@ -1,3 +1,7 @@
+#### 2.0.0.pre2
+- Add AppHook#email_from_name
+- Add AuthProvider#authorize_token
+
 #### 2.0.0.pre1
 - NOTE: This version includes breaking changes.
 - Depends on ncore 2.0

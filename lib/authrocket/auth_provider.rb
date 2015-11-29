@@ -53,5 +53,13 @@ module AuthRocket
       User.new(parsed, creds)
     end
 
+    # attribs - :access_token - required
+    # always returns a new object; check .errors? or .valid? to see how it went
+    def authorize_token(attribs={})
+      params = parse_request_params(attribs)
+      parsed, creds = request(:post, url+'/authorize', params)
+      User.new parsed, creds
+    end
+
   end
 end

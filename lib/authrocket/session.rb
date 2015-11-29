@@ -26,6 +26,7 @@ module AuthRocket
 
       user = User.new({
           id: jwt['uid'],
+          realm_id: jwt['aud'],
           username: jwt['un'],
           first_name: jwt['fn'],
           last_name: jwt['ln'],
@@ -37,6 +38,7 @@ module AuthRocket
               org_id: m['oid'],
               org: m['oid'] && Org.new({
                 id: m['oid'],
+                realm_id: jwt['aud'],
                 name: m['o'],
               }),
             })
