@@ -8,7 +8,7 @@ module AuthRocket
     has_many :memberships
     has_many :sessions
 
-    attr :custom, :email, :first_name
+    attr :custom, :email, :email_verification, :first_name
     attr :last_name, :name, :password, :password_confirmation
     attr :reference, :state, :user_type, :username
     attr_datetime :created_at, :last_login_at
@@ -77,6 +77,21 @@ module AuthRocket
     def update_password(params)
       params = parse_request_params(params, json_root: json_root).merge credentials: api_creds
       parsed, _ = request(:put, "#{url}/update_password", params)
+      load(parsed)
+      errors.empty? ? self : false
+    end
+
+    def request_email_verification(params={})
+      params = parse_request_params(params).merge credentials: api_creds
+      parsed, _ = request(:post, "#{url}/request_email_verification", params)
+      load(parsed)
+      errors.empty? ? self : false
+    end
+
+    # params - {token: '...'}
+    def verify_email(params)
+      params = parse_request_params(params, json_root: json_root).merge credentials: api_creds
+      parsed, _ = request(:post, "#{url}/verify_email", params)
       load(parsed)
       errors.empty? ? self : false
     end

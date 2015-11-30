@@ -4,8 +4,8 @@ module AuthRocket
 
     belongs_to :realm
 
-    attr :provider_type, :state
-    attr :login, :name_field, :signup
+    attr :name, :provider_type, :state
+    attr :email_verification, :login, :name_field, :password_field, :signup, :signup_mode, :verify
     attr :min_complexity, :min_length, :required_chars
     attr :client_id, :client_secret, :scopes
 
