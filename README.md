@@ -2,7 +2,7 @@
 
 [AuthRocket](http://authrocket.com/) provides Auth as a Service, making it quick and easy to add signups, logins, a full user management UI, and much more to your app.
 
-This gem works with both Rails and plain Ruby. It will auto-detect Rails and enable a couple Rails-specific features as appropriate.
+This gem works with both Rails and plain Ruby. It will auto-detect Rails and enable Rails-specific features as appropriate.
 
 
 ## Usage
@@ -14,8 +14,7 @@ For installation, add `gem 'authrocket'` to your Gemfile. More details are below
 
 By default, AuthRocket automatically loads your credentials from environment variables. For such hosting environments, including Heroku, just configure these:
 
-    AUTHROCKET_ACCOUNT    = org_SAMPLE
-    AUTHROCKET_API_KEY    = key_SAMPLE
+    AUTHROCKET_API_KEY    = ko_SAMPLE
     AUTHROCKET_URL        = https://api-e1.authrocket.com/v1
     AUTHROCKET_REALM      = rl_SAMPLE   # optional
     AUTHROCKET_JWT_SECRET = jsk_SAMPLE  # optional
@@ -29,8 +28,7 @@ By default, AuthRocket automatically loads your credentials from environment var
 It's possible to configure AuthRocket using a Rails initializer (or other initializaiton code) too.
 
     AuthRocket::Api.credentials = {
-      account: 'org_SAMPLE',
-      api_key: 'key_SAMPLE',
+      api_key: 'ko_SAMPLE',
       url: 'https://api-e1.authrocket.com/v1',
       realm: 'rl_SAMPLE',
       jwt_secret: 'jsk_SAMPLE'

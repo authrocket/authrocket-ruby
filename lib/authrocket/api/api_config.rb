@@ -34,7 +34,7 @@ module AuthRocket
 
     self.auth_header_prefix = 'X-Authrocket'
 
-    self.credentials_error_message = %Q{Missing API credentials or URL. Set default credentials using "AuthRocket::Api.credentials = {api_key: YOUR_API_KEY, account: YOUR_ACCOUNT_ID, url: AR_REGION_URL}"}
+    self.credentials_error_message = %Q{Missing API credentials or URL. Set default credentials using "AuthRocket::Api.credentials = {api_key: YOUR_API_KEY, url: AR_REGION_URL}"}
   end
 
 
@@ -57,7 +57,7 @@ module AuthRocket
             case part
             when /^jsk_/
               o[:jwt_secret] = part
-            when /^key_/
+            when /^k(ey|o)_/
               o[:api_key] = part
             when /^org_/
               o[:account] = part
