@@ -84,7 +84,7 @@ Then add login and logout methods:
       def login
         flash.keep
         if params[:token]
-          if AuthRocket::Session.from_token(params[:token], within: 60.seconds)
+          if AuthRocket::Session.from_token(params[:token])
             session[:ar_token] = params[:token]
             redirect_to root_path
             return
