@@ -1,3 +1,6 @@
+#### 2.0.0.pre3
+- Add LoginPolicy#redirect_uris
+
 #### 2.0.0.pre2
 - Add AppHook#email_from_name
 - Add AuthProvider#authorize_token
