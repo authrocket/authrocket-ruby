@@ -1,7 +1,7 @@
 module AuthRocket
   include NCore::Builder
-  Resource.include AuthRocket::Client
-  SingletonResource.include AuthRocket::Client
+  Resource.send :include, AuthRocket::Client
+  SingletonResource.send :include, AuthRocket::Client
 
   configure do
     self.default_url = ENV['AUTHROCKET_URL']
