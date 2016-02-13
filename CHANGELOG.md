@@ -1,13 +1,5 @@
-#### 2.0.0.pre3
-- Add LoginPolicy#redirect_uris
+#### 2.0.0
 
-#### 2.0.0.pre2
-- Add AppHook#email_from_name
-- Add AuthProvider#authorize_token
-- Detect new ko_ API keys
-- Support email verification
-
-#### 2.0.0.pre1
 - NOTE: This version includes breaking changes.
 - Depends on ncore 2.0
   - ncore update changes most method signatures to remove the final api_creds param - use a :credentials key instead:
@@ -24,34 +16,48 @@
 - Remove previously deprecated User#api_key, #last_login_on
 - Add Event#request_data, Session#request_data
 - Remove Event#ip, Session#ip, and Session#client - use #request_data['ip'] or #request_data['client'] instead
+- Add AppHook#email_from_name
+- Add AuthProvider#authorize_token
+- Detect new ko_ API keys
+- Support email verification
+- Add LoginPolicy#redirect_uris
+- Fix issue with older rubies
 
 #### 1.5.0
+
 - Update Event and add Notification
 
 #### 1.4.4
+
 - Bump to jwt 1.5
 - Enforce hmac algorithm for jwt
 - Add AuthProvider#min_complexity, #required_chars
 
 #### 1.4.3
+
 - Add AuthProvider#min_length
 
 #### 1.4.2
+
 - Add AppHook#email_renderer
 
 #### 1.4.1
+
 - Bump to jwt 1.4
 - Add AppHook#email_to
 - Update AppHook.event_types
 
 #### 1.4.0
+
 - Support social auth in AuthProvider and Credential
 
 #### 1.3.1
+
 - Add Realm#api_key_minutes
 - Add Session#client
 
 #### 1.3.0
+
 - Add Session resource
 - Deprecate Event.validate_token - Replaced by Session.from_token and Session.find
 - Add missing auth_provider.* events

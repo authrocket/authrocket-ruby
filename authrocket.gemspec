@@ -6,7 +6,7 @@ require 'authrocket/api/version'
 Gem::Specification.new do |gem|
   gem.name          = "authrocket"
   gem.version       = AuthRocket::VERSION
-  gem.authors       = ["thomas morgan"]
+  gem.authors       = ["AuthRocket Team"]
   gem.email         = ["hello@authrocket.com"]
   gem.description   = %q{AuthRocket client for Ruby.}
   gem.summary       = %q{AuthRocket client for Ruby}
@@ -18,7 +18,9 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency 'ncore', '~> 2.0.0.pre1'
+  gem.required_ruby_version = '>= 1.9'
+
+  gem.add_dependency 'ncore', '~> 2.0'
   gem.add_dependency 'jwt', '~> 1.5.0'
 
   gem.add_development_dependency "bundler", "~> 1.3"

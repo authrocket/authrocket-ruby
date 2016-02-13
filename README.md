@@ -61,7 +61,6 @@ Let's add a couple methods to your Application Controller, substituting the corr
 
       def require_user
         unless current_user
-          flash.keep
           redirect_to LOGIN_URL
         end
       end
@@ -82,7 +81,6 @@ Then add login and logout methods:
       skip_before_filter :require_user
 
       def login
-        flash.keep
         if params[:token]
           if AuthRocket::Session.from_token(params[:token])
             session[:ar_token] = params[:token]
