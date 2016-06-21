@@ -1,3 +1,7 @@
+#### 2.0.1
+
+- Add Notification#hook_type
+
 #### 2.0.0
 
 - NOTE: This version includes breaking changes.
