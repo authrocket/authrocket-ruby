@@ -1,3 +1,6 @@
+#### 2.0.2
+- Add Realm#resource_links
+
 #### 2.0.1
 
 - Add Notification#hook_type
