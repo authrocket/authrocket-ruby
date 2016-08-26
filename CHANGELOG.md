@@ -1,3 +1,6 @@
+#### 2.0.3
+- Fix error handling for missing jwt_secret
+
 #### 2.0.2
 - Add Realm#resource_links
 

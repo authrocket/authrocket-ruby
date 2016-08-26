@@ -14,7 +14,7 @@ module AuthRocket
 
     # options - :within - (in seconds) Maximum time since the token was originally issued
     def self.from_token(token, options={})
-      secret = (options[:credentials]||credentials)[:jwt_secret]
+      secret = (options[:credentials]||credentials||{})[:jwt_secret]
       raise Error, "missing :jwt_secret (or AUTHROCKET_JWT_SECRET)" unless secret
       return unless token
 
