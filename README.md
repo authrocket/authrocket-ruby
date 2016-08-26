@@ -1,6 +1,6 @@
 # AuthRocket
 
-[AuthRocket](http://authrocket.com/) provides Auth as a Service, making it quick and easy to add signups, logins, a full user management UI, and much more to your app.
+[AuthRocket](https://authrocket.com/) provides Auth as a Service, making it quick and easy to add signups, logins, social auth, a full user management UI, and much more to your app.
 
 This gem works with both Rails and plain Ruby. It will auto-detect Rails and enable Rails-specific features as appropriate.
 
