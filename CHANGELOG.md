@@ -1,3 +1,7 @@
+#### 2.1.0
+- AuthProvider.authorize, #authorize_token can now return a UserToken
+- Add UserToken#credential_type
+
 #### 2.0.3
 - Fix error handling for missing jwt_secret
 

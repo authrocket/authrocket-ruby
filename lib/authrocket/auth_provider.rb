@@ -50,7 +50,11 @@ module AuthRocket
     def self.authorize(attribs={})
       params = parse_request_params(attribs)
       parsed, creds = request(:post, url+'/authorize', params)
-      User.new(parsed, creds)
+      if parsed[:data][:object] == 'user_token'
+        UserToken.new(parsed, creds)
+      else
+        User.new(parsed, creds)
+      end
     end
 
     # attribs - :access_token - required
@@ -58,7 +62,11 @@ module AuthRocket
     def authorize_token(attribs={})
       params = parse_request_params(attribs)
       parsed, creds = request(:post, url+'/authorize', params)
-      User.new parsed, creds
+      if parsed[:data][:object] == 'user_token'
+        UserToken.new(parsed, creds)
+      else
+        User.new(parsed, creds)
+      end
     end
 
   end
