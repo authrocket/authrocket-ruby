@@ -1,6 +1,7 @@
 #### 2.1.1
 - Add Realm#jwt_fields
 - Deprecate Realm#jwt_data - replaced by #jwt_fields
+- Parse custom attributes from JWT when available
 
 #### 2.1.0
 - AuthProvider.authorize, #authorize_token can now return a UserToken

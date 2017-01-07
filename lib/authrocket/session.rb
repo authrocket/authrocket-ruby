@@ -31,15 +31,18 @@ module AuthRocket
           first_name: jwt['fn'],
           last_name: jwt['ln'],
           name: jwt['n'],
+          custom: jwt['cs'],
           memberships: jwt['m'] && jwt['m'].map do |m|
             Membership.new({
               permissions: m['p'],
+              custom: m['cs'],
               user_id: jwt['uid'],
               org_id: m['oid'],
-              org: m['oid'] && Org.new({
+              org: m['o'] && Org.new({
                 id: m['oid'],
                 realm_id: jwt['aud'],
                 name: m['o'],
+                custom: m['ocs'],
               }),
             })
           end,
