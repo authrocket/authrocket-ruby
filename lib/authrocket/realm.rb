@@ -10,9 +10,10 @@ module AuthRocket
     has_many :users
 
     attr :api_key_minutes, :api_key_policy, :api_key_prefix, :custom, :name
-    attr :jwt_data, :require_unique_emails, :resource_links, :session_minutes
+    attr :jwt_fields, :require_unique_emails, :resource_links, :session_minutes
     attr :session_type, :state, :username_validation_human
     attr :jwt_secret # readonly
+    attr :jwt_data # deprecated
 
 
     def reset!(params={})
