@@ -30,7 +30,7 @@ module AuthRocket
 
     self.instrument_key = 'request.authrocket'
 
-    self.status_page = 'http://status.notioneer.com/'
+    self.status_page = 'http://status.authrocket.com/'
 
     self.auth_header_prefix = 'X-Authrocket'
 

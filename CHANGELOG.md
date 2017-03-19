@@ -1,16 +1,27 @@
+#### 2.2.0
+
+- Add Realm#jwt_algo
+- Deprecate Realm#jwt_secret - replaced with Realm#jwt_key
+- Add JwtKey resource
+- Support RS256 signed tokens
+
 #### 2.1.1
+
 - Add Realm#jwt_fields
 - Deprecate Realm#jwt_data - replaced by #jwt_fields
 - Parse custom attributes from JWT when available
 
 #### 2.1.0
+
 - AuthProvider.authorize, #authorize_token can now return a UserToken
 - Add UserToken#credential_type
 
 #### 2.0.3
+
 - Fix error handling for missing jwt_secret
 
 #### 2.0.2
+
 - Add Realm#resource_links
 
 #### 2.0.1

@@ -1,3 +1,6 @@
+require 'openssl'
+require 'jwt'
+
 module AuthRocket
   class Session < Resource
     crud :all, :find, :create, :delete
@@ -13,12 +16,21 @@ module AuthRocket
 
 
     # options - :within - (in seconds) Maximum time since the token was originally issued
+    #         - credentials: {jwt_secret: StringOrKey} - used to verify the token
+    #         - :algo - one of HS256, RS256 (default: auto-detect based on :jwt_secret)
     def self.from_token(token, options={})
       secret = (options[:credentials]||credentials||{})[:jwt_secret]
       raise Error, "missing :jwt_secret (or AUTHROCKET_JWT_SECRET)" unless secret
       return unless token
 
-      jwt, _ = JWT.decode token, secret, true, algorithm: 'HS256'
+      algo = options[:algo]
+      if secret.is_a?(String) && secret.length > 256
+        secret = OpenSSL::PKey.read secret
+      end
+      algo ||= 'RS256' if secret.is_a?(OpenSSL::PKey::RSA)
+      algo ||= 'HS256'
+
+      jwt, _ = JWT.decode token, secret, true, algorithm: algo
 
       if within = options.delete(:within)
         return if jwt['iat'] < Time.now.to_i - within

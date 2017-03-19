@@ -5,6 +5,7 @@ module AuthRocket
     has_many :app_hooks
     has_many :auth_providers
     has_many :events
+    has_many :jwt_keys
     has_many :login_policies
     has_many :orgs
     has_many :users
@@ -12,7 +13,8 @@ module AuthRocket
     attr :api_key_minutes, :api_key_policy, :api_key_prefix, :custom, :name
     attr :jwt_fields, :require_unique_emails, :resource_links, :session_minutes
     attr :session_type, :state, :username_validation_human
-    attr :jwt_secret # readonly
+    attr :jwt_key # readonly
+    attr :jwt_secret # readonly, deprecated
     attr :jwt_data # deprecated
 
 
