@@ -18,7 +18,7 @@ module AuthRocket
           realm.created  realm.updated  realm.deleted
           user.created  user.updated  user.deleted
             user.email.verification_requested  user.email.verified
-            user.login.succeeded  user.login.failed
+            user.login.succeeded  user.login.failed  user.login.initiated
             user.password_token.created  user.password_token.consumed  user.password_token.failed
         ).sort
     end

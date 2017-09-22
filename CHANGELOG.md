@@ -1,3 +1,7 @@
+#### 2.3.0
+
+- Add support for TOTP MFA
+
 #### 2.2.0
 
 - Add Realm#jwt_algo

@@ -51,6 +51,17 @@ module AuthRocket
         new(parsed, creds)
       end
 
+      # params - {username: '...', token: 'kli_...', code: '000000'}
+      def authenticate_code(params)
+        params = parse_request_params(params, json_root: json_root)
+        username = params[json_root].delete(:username) || '--'
+        parsed, creds = request(:post, "#{url}/#{CGI.escape username}/authenticate_code", params)
+        if parsed[:errors].any?
+          raise ValidationError, parsed[:errors]
+        end
+        new(parsed, creds)
+      end
+
       def generate_password_token(username, params={})
         params = parse_request_params(params)
         parsed, creds = request(:post, "#{url}/#{CGI.escape username}/generate_password_token", params)
