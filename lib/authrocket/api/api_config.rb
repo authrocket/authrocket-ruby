@@ -14,7 +14,7 @@ module AuthRocket
 
     if ENV['AUTHROCKET_URI']
       self.credentials = parse_credentials ENV['AUTHROCKET_URI']
-    elsif ENV['AUTHROCKET_API_KEY']
+    elsif ENV['AUTHROCKET_API_KEY'] || ENV['AUTHROCKET_JWT_SECRET']
       self.credentials = {
         api_key: ENV['AUTHROCKET_API_KEY'],
         account: ENV['AUTHROCKET_ACCOUNT'],
@@ -30,7 +30,7 @@ module AuthRocket
 
     self.instrument_key = 'request.authrocket'
 
-    self.status_page = 'http://status.authrocket.com/'
+    self.status_page = 'https://status.authrocket.com/'
 
     self.auth_header_prefix = 'X-Authrocket'
 

@@ -1,3 +1,7 @@
+#### 2.3.1
+
+- Properly self-configure when only using :jwt_secret
+
 #### 2.3.0
 
 - Add support for TOTP MFA
