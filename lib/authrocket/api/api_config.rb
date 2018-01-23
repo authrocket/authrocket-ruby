@@ -21,6 +21,12 @@ module AuthRocket
         realm:   ENV['AUTHROCKET_REALM'],
         jwt_secret: ENV['AUTHROCKET_JWT_SECRET']
       }
+    else
+      self.credentials = {}
+    end
+
+    if ENV['AUTHROCKET_LOGIN_URL']
+      self.credentials[:loginrocket_url] = ENV['AUTHROCKET_LOGIN_URL']
     end
 
     self.debug = false
@@ -35,6 +41,13 @@ module AuthRocket
     self.auth_header_prefix = 'X-Authrocket'
 
     self.credentials_error_message = %Q{Missing API credentials or URL. Set default credentials using "AuthRocket::Api.credentials = {api_key: YOUR_API_KEY, url: AR_REGION_URL}"}
+
+
+    mattr_accessor :use_default_routes
+    self.use_default_routes = true
+
+    mattr_accessor :default_login_path
+    self.default_login_path = '/'
   end
 
 

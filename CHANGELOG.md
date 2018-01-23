@@ -1,3 +1,7 @@
+#### 2.4.0
+
+- Add Rails Engine for expedited setup
+
 #### 2.3.1
 
 - Properly self-configure when only using :jwt_secret

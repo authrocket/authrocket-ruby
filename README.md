@@ -5,124 +5,224 @@
 This gem works with both Rails and plain Ruby. It will auto-detect Rails and enable Rails-specific features as appropriate.
 
 
-## Usage
 
-For installation, add `gem 'authrocket'` to your Gemfile. More details are below.
+## Usage - Rails
 
+AuthRocket includes a streamlined Rails integration that automatically provides login and logout actions, and all relevant handling. For a new app, we highly recommend this.
 
-### Configuration
+Note: The streamlined integration requires Rails 4.2+.
 
-By default, AuthRocket automatically loads your credentials from environment variables. For such hosting environments, including Heroku, just configure these:
+To your Gemfile, add:
+
+    gem 'authrocket', require: 'authrocket/rails'
+
+Then ensure the following environment variables are set:
+
+    AUTHROCKET_LOGIN_URL  = https://sample.e1.loginrocket.com/
+    AUTHROCKET_JWT_SECRET = jsk_SAMPLE
+
+If you plan to access the AuthRocket API as well, you'll need these variables too:
 
     AUTHROCKET_API_KEY    = ko_SAMPLE
     AUTHROCKET_URL        = https://api-e1.authrocket.com/v1
     AUTHROCKET_REALM      = rl_SAMPLE   # optional
-    AUTHROCKET_JWT_SECRET = jsk_SAMPLE  # optional
+    
+Finally, add a `before_action` command to any/all controllers or actions that should require a login.
 
-`AUTHROCKET_URL` must be updated based on what cluster your account is provisioned on.
+For example, to protect your entire app:
 
-`AUTHROCKET_REALM` is optional. If you're using a single Realm, it's easiest to add it here as an application-wide default. If you're using multiple Realms with your app, we recommend leaving it out here and setting it as you go.
+    class ApplicationController < ActionController::Base
+      before_action :require_valid_token
+    end
 
-`AUTHROCKET_JWT_SECRET` is optional. It only should be included if you've also specified a single realm via AUTHROCKET_REALM *and* you're using hosted logins or authrocket.js. The tokens returned by both are JWT-compatible and can be verified in-app using a matching secret.
+Selectively exempt certain actions or controllers using the standard `skip_before_action` method:
 
-It's possible to configure AuthRocket using a Rails initializer (or other initializaiton code) too.
+    class ContactUsController < ActionController::Base
+      skip_before_action :require_valid_token, only: [:new, :create]
+    end
+
+Helpers are provided to create login, signup, and logout links:
+
+    <%= link_to 'Login', ar_login_url %>
+    <%= link_to 'Signup', ar_signup_url %>
+    <%= link_to 'Logout', logout_path %>
+
+Both the current session and user are available to your controllers and views:
+
+    current_session # => AuthRocket::Session
+    current_user    # => AuthRocket::User
+
+Membership and Org data is accessible through those helpers as well. Be sure to tell AuthRocket to include Membership and/or Org data in the JWT (Realm -> Settings -> Sessions & JWT).
+
+    current_user.memberships
+    current_user.memberships.first.org
+    current_user.orgs
+
+See below for customization details.
+
+
+
+## Usage - everywhere else
+
+If you aren't using Rails, or if the streamlined integration above is too opinionated, use the gem without the extra Rails integration.
+
+In your Gemfile, add:
+
+    gem 'authrocket'
+
+Then set the following environment variables:
+
+    # If accessing the AuthRocket API:
+    AUTHROCKET_API_KEY    = ko_SAMPLE
+    AUTHROCKET_URL        = https://api-e1.authrocket.com/v1 # must match your account's provisioned cluster
+    AUTHROCKET_REALM      = rl_SAMPLE   # optional
+    #
+    # If using JWT-verification of AuthRocket's login tokens:
+    AUTHROCKET_JWT_SECRET = jsk_SAMPLE
+
+If you're using either Hosted LoginRocket or authrocket.js to manage logins, see Verifing login tokens below. If you plan to use the API to directly authenticate, see the [API docs](https://authrocket.com/docs/api).
+
+
+
+## Configuration
+
+By default, AuthRocket automatically loads credentials from environment variables. This is optimal for any 12-factor deployment. Supported variables are:
+
+`AUTHROCKET_API_KEY = ko_SAMPLE`
+Your AuthRocket API key. Required to use the API (but not if only performing JWT verification of login tokens).
+
+`AUTHROCKET_JWT_SECRET = jsk_SAMPLE`
+Used to perform JWT signing verification of login tokens. Not required if validating all tokens using the API instead. This is a realm-specific value, so like `AUTHROCKET_REALM`, set it on a per-use basis if using multiple realms.
+
+`AUTHROCKET_LOGIN_URL = https://sample.e1.loginrocket.com/`
+The LoginRocket URL for your Connected App. Only used by the streamlined Rails integration (for redirects), but still available to use otherwise. If your app uses multiple realms, you'll need to handle this on your own. If you're using a custom domain, this will be that domain and will not contain 'loginrocket.com'.
+
+`AUTHROCKET_REALM = rl_SAMPLE`
+Sets an application-wide default realm ID. If you're using a single realm, this is definitely easiest. Certain multi-tenant apps might using multiple realms. In this case, don't set this globally, but include it as part of the `:credentials` set for each API method.
+
+`AUTHROCKET_URL = https://api-e1.authrocket.com/v1`
+The URL of the AuthRocket API server. This may vary depending on which cluster your account is provisioned on.
+
+
+It's also possible to configure AuthRocket using a Rails initializer (or other initialization code). 
 
     AuthRocket::Api.credentials = {
       api_key: 'ko_SAMPLE',
-      url: 'https://api-e1.authrocket.com/v1',
+      jwt_secret: 'jsk_SAMPLE',
+      loginrocket_url: 'https://sample.e1.loginrocket.com/',
       realm: 'rl_SAMPLE',
-      jwt_secret: 'jsk_SAMPLE'
+      url: 'https://api-e1.authrocket.com/v1'
     }
 
 
-### Hosted Logins
 
-AuthRocket has a few options to handle logins. One option is to let AuthRocket handle the login process completely, which is what's shown here. Your app only needs to verify the final login token. This example is specific to Rails, but adapt accordingly for Sinatra or any other framework.
+## Customizing the Rails integration
 
-To get started, login to AuthRocket and add a Login Policy (under Logins/Signups) for your chosen Realm (create your first Realm if you haven't already). 
+The built-in Rails integration tries to handle as much for you as possible. However, there may be times when you wish to modify the default behavior.
 
-Be sure to enable Hosted Logins (a separate step) and specify a Login Handler URL. For development purposes, we'll point the Login Handler URL to your local app. Assuming your Rails app is running on port 3000, you'd enter `http://localhost:3000/login`.
 
-After enabling Hosted Logins, take note of the LoginRocket URL. You'll need this below.
+#### The default post-login path
 
-Let's add a couple methods to your Application Controller, substituting the correct value for `LOGIN_URL`:
+After a user logs in (or signs up), they are returned to either the last page they tried to access (if known) or to `'/'` (the default path).
 
-    class ApplicationController < ActionController::Base
-      before_filter :require_user
-      # This protects *all* of your app. If that's not what
-      #   you want, then just add this to the controllers
-      #   that need to be protected.
+This default path may be changed using an initializer.
 
-      private
+Create/edit `config/initializers/authrocket.rb` and add:
 
-      LOGIN_URL = 'https://sample.e1.loginrocket.com/'
-      # This should be your app's own LoginRocket URL, as
-      #   shown in the Login Policy details.
+```ruby
+AuthRocket::Api.default_login_path = '/manage'
+```
 
-      def require_user
-        unless current_user
-          redirect_to LOGIN_URL
-        end
-      end
 
-      helper_method :current_user
-      def current_user
-        @_current_user ||= AuthRocket::Session.from_token(session[:ar_token]).try(:user)
-      end
-    end
+#### /login and /logout routes
 
-Create a Login or Session controller if you don't have one already:
+The default routes for login and logout are `/login` and `/logout`, respectively. To override them, add an initializer for AuthRocket (eg: `config/initializers/authrocket.rb`) and add:
 
-    rails g controller logins
+    AuthRocket::Api.use_default_routes = false
 
-Then add login and logout methods:
+Then add your own routes to `config/routes.rb`:
 
-    class LoginsController < ApplicationController
-      skip_before_filter :require_user
+    get 'mylogin' => 'logins#login'
+    get 'mylogout' => 'logins#logout'
 
+
+#### The login controller
+
+AuthRocket's default login controller automatically sets up the session (by storing the login token in `session[:ar_token]`) and makes a best effort at returning the user to where they were when the login request was triggered.
+
+If you require more customization than provided by modifying the default post-login path, as outlined above, you may create your own LoginsController and inherit from AuthRocket's controller:
+
+    class LoginsController < AuthRocket::ArController
       def login
-        if params[:token]
-          if AuthRocket::Session.from_token(params[:token])
-            session[:ar_token] = params[:token]
-            redirect_to root_path
-            return
-          end
+        super
+        if current_session
+          # @redir will be present if the user's previous URL was able to be
+          # saved. If not, then provide a fallback (eg: root_path,
+          # manager_path, etc).
+          redirect_to @redir || dashboard_path
         end
-        require_user
+        # else if login failed, a redirect to LoginRocket happens automatically
       end
 
       def logout
-        session[:ar_token] = nil
+        super
+        # Change the path and/or the message.
         redirect_to root_path, notice: 'You have been logged out.'
       end
     end
 
-Finally, update `config/routes.rb`:
-
-    get '/login' => 'logins#login'
-    get '/logout' => 'logins#logout'
-
-That's it. You're all done!
+If you wish to replace all of the login logic, create a new, different controller that doesn't inherit from `AuthRocket::ArController` (and also override the routes, as per above). You may wish to look at `ArController` as a reference.
 
 
-### Other Methods
 
-For full details on the AuthRocket API, including examples for Ruby, see our [documentation](http://authrocket.com/docs).
+## Verifying login tokens
+
+If you're not using the streamlined Rails integration, you'll need to verify the login tokens (unless you're using the API to authenticate directly).
 
 
-## Installation
+#### JWT verification
 
-Add this line to your application's Gemfile:
+AuthRocket's login tokens use the JWT standard and are cryptographically signed. Verifying the signature is extremely fast. Here's are a couple examples of using this:
 
-    gem 'authrocket'
+    def current_user
+      @_current_user ||= AuthRocket::Session.from_token(session[:ar_token]).try(:user)
+    end
 
-And then execute:
+`from_token` returns `nil` if the token is missing, expired, or otherwise invalid.
 
-    $ bundle
 
-Or install it yourself as:
+#### API verification
 
-    $ gem install authrocket
+AuthRocket also supports Managed Sessions, which enables you to enforce logouts, even across apps (single sign-out!). In this instance, the session is regularly verified using the AuthRocket API.
+
+    def current_user
+      @_current_user ||= AuthRocket::Session.retrieve(session[:ar_token]).try(:user)
+    end
+
+For better performance (and to avoid API rate limits), you may want to cache the results of the API call for 3-15 minutes.
+
+
+#### Initial login
+
+Each of the above are designed for ongoing use. The initial login isn't going to be much different though. Here's an example login action:
+
+    def login
+      if params[:token]
+        if AuthRocket::Session.from_token(params[:token])
+          session[:ar_token] = params[:token]
+          redirect_to '/'
+          return
+        end
+      end
+      redirect_to AuthRocket::Api.credentials[:loginrocket_url]
+    end
+
+
+
+## Reference
+
+For full details on the AuthRocket API, including examples for Ruby, see our [documentation](https://authrocket.com/docs).
+
 
 
 ## Contributing
@@ -132,6 +232,7 @@ Or install it yourself as:
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
 
 
 ## License
