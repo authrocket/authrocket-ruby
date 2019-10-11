@@ -8,9 +8,9 @@ module AuthRocket
     has_many :memberships
     has_many :sessions
 
-    attr :custom, :email, :email_verification, :first_name
-    attr :last_name, :name, :password, :password_confirmation
-    attr :reference, :state, :user_type, :username
+    attr :custom, :email, :email_verification, :first_name, :last_name, :name
+    attr :reference, :state, :username
+    attr :password, :password_confirmation # writeonly
     attr_datetime :created_at, :last_login_at
 
 
@@ -20,93 +20,127 @@ module AuthRocket
     end
 
     def orgs
-      memberships.map(&:org).compact
+      memberships.map(&:org)
     end
 
     def find_org(id)
       orgs.detect{|o| o.id == id } || raise(RecordNotFound)
     end
 
-    def human? ; user_type=='human' ; end
-    def api?   ; user_type=='api'   ; end
-
 
     class << self
+      # id - email|username|id
 
-      def authenticate(username, password, params={})
-        params = parse_request_params(params).merge password: password
-        parsed, creds = request(:post, "#{url}/#{CGI.escape username}/authenticate", params)
-        if parsed[:errors].any?
-          raise ValidationError, parsed[:errors]
-        end
-        new(parsed, creds)
-      end
-
-      def authenticate_key(api_key, params={})
-        params = parse_request_params(params).merge api_key: api_key
-        parsed, creds = request(:post, "#{url}/authenticate_key", params)
-        if parsed[:errors].any?
-          raise ValidationError, parsed[:errors]
-        end
-        new(parsed, creds)
-      end
-
-      # params - {username: '...', token: 'kli_...', code: '000000'}
-      def authenticate_code(params)
+      # params - {password: '...'}
+      # returns: Session || Token
+      def authenticate(id, params)
         params = parse_request_params(params, json_root: json_root)
-        username = params[json_root].delete(:username) || '--'
-        parsed, creds = request(:post, "#{url}/#{CGI.escape username}/authenticate_code", params)
-        if parsed[:errors].any?
-          raise ValidationError, parsed[:errors]
-        end
-        new(parsed, creds)
+        parsed, creds = request(:post, "#{url}/#{CGI.escape id}/authenticate", params)
+        obj = factory(parsed, creds)
+        raise RecordInvalid, obj if obj.errors?
+        obj
       end
 
-      def generate_password_token(username, params={})
+      # params - {token: 'kli:...', code: '000000'}
+      # returns: Session
+      def authenticate_token(params)
+        params = parse_request_params(params, json_root: json_root)
+        parsed, creds = request(:post, "#{url}/authenticate_token", params)
+        obj = factory(parsed, creds)
+        raise RecordInvalid, obj if obj.errors?
+        obj
+      end
+
+      # returns: Token
+      def generate_password_token(id, params={})
         params = parse_request_params(params)
-        parsed, creds = request(:post, "#{url}/#{CGI.escape username}/generate_password_token", params)
-        if parsed[:errors].any?
-          raise ValidationError, parsed[:errors]
-        end
-        new(parsed, creds)
+        parsed, creds = request(:post, "#{url}/#{CGI.escape id}/generate_password_token", params)
+        obj = factory(parsed, creds)
+        raise RecordInvalid, obj if obj.errors?
+        obj
       end
 
-      # params - {username: '...', token: '...', password: '...', password_confirmation: '...'}
+      # params - {token: '...', password: '...', password_confirmation: '...'}
+      # returns: Session || Token
       def reset_password_with_token(params)
         params = parse_request_params(params, json_root: json_root)
-        username = params[json_root].delete(:username) || '--'
-        parsed, creds = request(:post, "#{url}/#{CGI.escape username}/reset_password_with_token", params)
-        if parsed[:errors].any?
-          raise ValidationError, parsed[:errors]
-        end
-        new(parsed, creds)
+        parsed, creds = request(:post, "#{url}/reset_password_with_token", params)
+        obj = factory(parsed, creds)
+        raise RecordInvalid, obj if obj.errors?
+        obj
+      end
+
+      # returns: Token
+      def request_email_verification(id, params={})
+        params = parse_request_params(params)
+        parsed, creds = request(:post, "#{url}/#{CGI.escape id}/request_email_verification", params)
+        obj = factory(parsed, creds)
+        raise RecordInvalid, obj if obj.errors?
+        obj
+      end
+
+      # params - {token: '...'}
+      # returns: User
+      def verify_email(params)
+        params = parse_request_params(params, json_root: json_root)
+        parsed, creds = request(:post, "#{url}/verify_email", params)
+        obj = factory(parsed, creds)
+        raise RecordInvalid, obj if obj.errors?
+        obj
       end
 
     end
 
+
+    # params - {token: '...'}
+    def accept_invitation(params)
+      params = parse_request_params(params, json_root: json_root).reverse_merge credentials: api_creds
+      parsed, _ = request(:post, "#{url}/accept_invitation", params)
+      load(parsed)
+      errors.empty? ? self : false
+    end
+
     # params - {current_password: 'old', password: 'new', password_confirmation: 'new'}
     def update_password(params)
-      params = parse_request_params(params, json_root: json_root).merge credentials: api_creds
+      params = parse_request_params(params, json_root: json_root).reverse_merge credentials: api_creds
       parsed, _ = request(:put, "#{url}/update_password", params)
       load(parsed)
       errors.empty? ? self : false
     end
 
+    # params - {email:, first_name:, last_name:, password:, password_confirmation:, username:}
+    def update_profile(params)
+      params = parse_request_params(params, json_root: json_root).reverse_merge credentials: api_creds
+      parsed, _ = request(:put, "#{url}/profile", params)
+      load(parsed)
+      errors.empty? ? self : false
+    end
+
+
+    # returns: Session || Token
+    #   (Session.user !== self)
+    def authenticate(params)
+      self.class.authenticate id, params.reverse_merge(credentials: api_creds)
+    rescue RecordInvalid => ex
+      errors.merge! ex.errors
+      false
+    end
+
+    # returns: Token
+    def generate_password_token(params={})
+      self.class.generate_password_token id, params.reverse_merge(credentials: api_creds)
+    rescue RecordInvalid => ex
+      errors.merge! ex.errors
+      false
+    end
+
+    # returns: Token
     def request_email_verification(params={})
-      params = parse_request_params(params).merge credentials: api_creds
-      parsed, _ = request(:post, "#{url}/request_email_verification", params)
-      load(parsed)
-      errors.empty? ? self : false
+      self.class.request_email_verification id, params.reverse_merge(credentials: api_creds)
+    rescue RecordInvalid => ex
+      errors.merge! ex.errors
+      false
     end
-
-    # params - {token: '...'}
-    def verify_email(params)
-      params = parse_request_params(params, json_root: json_root).merge credentials: api_creds
-      parsed, _ = request(:post, "#{url}/verify_email", params)
-      load(parsed)
-      errors.empty? ? self : false
-    end
-
 
   end
 end

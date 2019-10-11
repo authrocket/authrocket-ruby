@@ -2,24 +2,40 @@ module AuthRocket
   class Realm < Resource
     crud :all, :find, :create, :update, :delete
 
-    has_many :app_hooks
     has_many :auth_providers
+    has_many :client_apps
+    has_many :connections
+    has_many :domains
     has_many :events
+    has_many :hooks
+    has_many :invitations
     has_many :jwt_keys
-    has_many :login_policies
+    has_many :named_permissions
     has_many :orgs
+    has_many :resource_links
     has_many :users
 
-    attr :api_key_minutes, :api_key_policy, :api_key_prefix, :custom, :name
-    attr :jwt_fields, :require_unique_emails, :resource_links, :session_minutes
-    attr :session_type, :state, :username_validation_human
+    attr :custom, :environment, :name, :public_name, :state
+    attr :email_verification, :org_mode, :signup
+    attr :name_field, :org_name_field, :password_field, :username_field
+    attr :branding, :color_1, :logo, :stylesheet
+    attr :access_token_minutes, :jwt_algo, :jwt_minutes, :jwt_scopes, :session_minutes
     attr :jwt_key # readonly
-    attr :jwt_secret # readonly, deprecated
-    attr :jwt_data # deprecated
+
+
+    def named_permissions
+      reload unless @attribs[:named_permissions]
+      @attribs[:named_permissions]
+    end
+
+    def resource_links
+      reload unless @attribs[:resource_links]
+      @attribs[:resource_links]
+    end
 
 
     def reset!(params={})
-      params = parse_request_params(params).merge credentials: api_creds
+      params = parse_request_params(params).reverse_merge credentials: api_creds
       parsed, _ = request(:post, "#{url}/reset", params)
       load(parsed)
       errors.empty? ? self : false

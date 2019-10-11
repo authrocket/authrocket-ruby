@@ -1,3 +1,13 @@
+#### 3.0.0
+
+- NOTE: This version includes breaking changes.
+  It is only compatible with AuthRocket 2. Use gem version '~> 2.0' with AuthRocket 1.
+- Update resources for AuthRocket 2
+  - Add: ClientApp, Connection, Domain, Invitation, NamedPermission, Oauth2Session, ResourceLink, Token
+  - Remove: LoginPolicy, UserToken,
+  - Rename: AppHook -> Hook
+  - Update most others
+
 #### 2.4.0
 
 - Add Rails Engine for expedited setup

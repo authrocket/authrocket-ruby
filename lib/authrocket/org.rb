@@ -4,6 +4,7 @@ module AuthRocket
 
     belongs_to :realm
     has_many :events
+    has_many :invitations
     has_many :memberships
 
     attr :custom, :name, :reference, :state
@@ -11,7 +12,7 @@ module AuthRocket
 
 
     def users
-      memberships.map(&:user).compact
+      memberships.map(&:user)
     end
 
     def find_user(uid)

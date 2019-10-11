@@ -5,10 +5,11 @@ module AuthRocket
   class Session < Resource
     crud :all, :find, :create, :delete
 
+    belongs_to :client_app
     belongs_to :user
 
     attr :token # readonly
-    attr_datetime :created_at, :expires_at # readonly
+    attr_datetime :created_at, :expires_at
 
     def request_data
       self[:request]
@@ -37,34 +38,38 @@ module AuthRocket
       end
 
       user = User.new({
-          id: jwt['uid'],
-          realm_id: jwt['aud'],
-          username: jwt['un'],
-          first_name: jwt['fn'],
-          last_name: jwt['ln'],
-          name: jwt['n'],
+          id: jwt['sub'],
+          realm_id: jwt['rid'],
+          username: jwt['preferred_username'],
+          first_name: jwt['given_name'],
+          last_name: jwt['family_name'],
+          name: jwt['name'],
+          email: jwt['email'],
+          email_verification: jwt['email_verified'] ? 'verified' : 'none',
+          reference: jwt['ref'],
           custom: jwt['cs'],
-          memberships: jwt['m'] && jwt['m'].map do |m|
+          memberships: jwt['orgs'] && jwt['orgs'].map do |m|
             Membership.new({
-              permissions: m['p'],
-              custom: m['cs'],
-              user_id: jwt['uid'],
+              id: m['mid'],
+              permissions: m['perm'],
+              user_id: jwt['sub'],
               org_id: m['oid'],
-              org: m['o'] && Org.new({
+              org: Org.new({
                 id: m['oid'],
-                realm_id: jwt['aud'],
-                name: m['o'],
-                custom: m['ocs'],
+                realm_id: jwt['rid'],
+                name: m['name'],
+                reference: m['ref'],
+                custom: m['cs'],
               }),
             })
           end,
         }, options[:credentials])
       session = new({
-          id: jwt['tk'],
+          id: jwt['sid'],
           created_at: jwt['iat'],
           expires_at: jwt['exp'],
           token: token,
-          user_id: jwt['uid'],
+          user_id: jwt['sub'],
           user: user
         }, options[:credentials])
       

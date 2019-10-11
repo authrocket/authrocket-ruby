@@ -6,7 +6,7 @@ module AuthRocket
     belongs_to :user
     has_many :events
 
-    attr :custom, :permissions
+    attr :permissions
     attr_datetime :expires_at
 
 

@@ -5,7 +5,27 @@ require 'jwt'
   require "authrocket/api/#{f}"
 end
 
-%w(app_hook auth_provider credential event jwt_key login_policy membership notification org realm session user user_token).each do |f|
+%w(
+  auth_provider
+  client_app
+  connection
+  credential
+  domain
+  event
+  hook
+  invitation
+  jwt_key
+  membership
+  named_permission
+  notification
+  oauth2_session
+  org
+  realm
+  resource_link
+  session
+  token
+  user
+).each do |f|
   require "authrocket/#{f}"
 end
 

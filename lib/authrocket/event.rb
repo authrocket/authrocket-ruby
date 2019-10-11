@@ -2,16 +2,15 @@ module AuthRocket
   class Event < Resource
     crud :all, :find
 
-    belongs_to :app_hook
     belongs_to :auth_provider
-    belongs_to :login_policy
+    belongs_to :invitation
     belongs_to :membership
     belongs_to :org
     belongs_to :realm
     belongs_to :user
     has_many :notifications
 
-    attr :event_type
+    attr :event_type, :token
     attr_datetime :event_at
 
     def request_data
