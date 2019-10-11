@@ -36,6 +36,8 @@ module AuthRocket
     self.strict_attributes = true
 
 
+    self.i18n_scope = :authrocket
+
     self.instrument_key = 'request.authrocket'
 
     self.status_page = 'https://status.authrocket.com/'
@@ -54,11 +56,6 @@ module AuthRocket
 
 
   class << self
-    # makes AuthRocket::Realm.model_name.param_key do the right thing
-    def use_relative_model_naming?
-      true
-    end
-
 
     private
 
