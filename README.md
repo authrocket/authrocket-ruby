@@ -8,7 +8,7 @@ This gem works with both Rails and plain Ruby. It will auto-detect Rails and ena
 
 ## Usage - Rails
 
-AuthRocket includes a streamlined Rails integration that automatically provides login and logout actions, and all relevant handling. For a new app, we highly recommend this.
+AuthRocket includes a streamlined Rails integration that automatically handles logins and logouts. For a new app, we highly recommend this.
 
 Note: The streamlined integration requires Rails 4.2+.
 
@@ -16,10 +16,13 @@ To your Gemfile, add:
 
     gem 'authrocket', require: 'authrocket/rails'
 
-Then ensure the following environment variables are set:
+Then ensure the following environment variable is set:
+
+    LOGINROCKET_URL    = https://sample.e2.loginrocket.com/
+
+If you've changed the default JWT key type to HS256, you'll also need this variable:
 
     AUTHROCKET_JWT_KEY = jsk_SAMPLE
-    LOGINROCKET_URL    = https://sample.e2.loginrocket.com/
 
 If you plan to access the AuthRocket API as well, you'll need these variables too:
 
@@ -32,31 +35,36 @@ Finally, add a `before_action` command to any/all controllers or actions that sh
 For example, to protect your entire app:
 
     class ApplicationController < ActionController::Base
-      before_action :require_valid_token
+      before_action :require_login
     end
 
 Selectively exempt certain actions or controllers using the standard `skip_before_action` method:
 
-    class ContactUsController < ActionController::Base
-      skip_before_action :require_valid_token, only: [:new, :create]
+    class ContactUsController < ApplicationController
+      skip_before_action :require_login, only: [:new, :create]
     end
 
-Helpers are provided to create login, signup, and logout links:
+Helpers are provided to create login, signup, and logout links, as well as for users to manage their profile:
 
     <%= link_to 'Login', ar_login_url %>
     <%= link_to 'Signup', ar_signup_url %>
     <%= link_to 'Logout', logout_path %>
+    <%= link_to 'Manage Profile', ar_profile_url %>
 
-Both the current session and user are available to your controllers and views:
+Both the current Session and User are available to your controllers and views:
 
     current_session # => AuthRocket::Session
     current_user    # => AuthRocket::User
 
-Membership and Org data is accessible through those helpers as well. Be sure to tell AuthRocket to include Membership and/or Org data in the JWT (Realm -> Settings -> Sessions & JWT).
+The current Membership and Org (account) are accessible through those helpers as well.
 
-    current_user.memberships
-    current_user.memberships.first.org
-    current_user.orgs
+    current_membership
+    current_org
+
+If a user is a member of more than one org (account), `current_membership` and `current_org` will be reflect the currently selected account. Additional helpers are available to provide appropriate links to your users:
+
+    <%= link_to 'Manage current account', ar_account_url %>
+    <%= link_to 'Switch accounts', ar_accounts_url %>
 
 See below for customization details.
 
@@ -80,7 +88,6 @@ Then set the following environment variables:
     # If using JWT-verification of AuthRocket's login tokens:
     AUTHROCKET_JWT_KEY = jsk_SAMPLE
 
-If you're using either Hosted LoginRocket or authrocket.js to manage logins, see Verifing login tokens below. If you plan to use the API to directly authenticate, see the [API docs](https://authrocket.com/docs/api).
 
 
 
@@ -101,7 +108,7 @@ Sets an application-wide default realm ID. If you're using a single realm, this 
 The URL of the AuthRocket API server. This may vary depending on which cluster your service is provisioned on.
 
 `LOGINROCKET_URL = https://sample.e2.loginrocket.com/`
-The LoginRocket URL for your Connected App. Only used by the streamlined Rails integration (for redirects), but still available to use otherwise. If your app uses multiple realms, you'll need to handle this on your own. If you're using a custom domain, this will be that domain and will not contain 'loginrocket.com'.
+The LoginRocket URL for your Connected App. Used by the streamlined Rails integration (for redirects) and for auto-retrieval of RS256 JWT keys (if AUTHROCKET_JWT_KEY is not set). If your app uses multiple realms, you'll need to handle this on your own. If you're using a custom domain, this will be that domain and will not contain 'loginrocket.com'.
 
 
 It's also possible to configure AuthRocket using a Rails initializer (or other initialization code). 
@@ -121,53 +128,56 @@ It's also possible to configure AuthRocket using a Rails initializer (or other i
 The built-in Rails integration tries to handle as much for you as possible. However, there may be times when you wish to modify the default behavior.
 
 
-#### The default post-login path
+#### Logins
 
-After a user logs in (or signs up), they are returned to either the last page they tried to access (if known) or to `'/'` (the default path).
+The Rails integration handles logins on any path by detecting the presence of `?token=...`. It will process the login and then immediately redirect back to the same path without `?token=`; this helps prevent browsers and bookmarks from accidentally saving or caching the login token.
 
-This default path may be changed using an initializer.
+Likewise, the built-in handler for `before_action :require_login` will automatically redirect to LoginRocket when the user is not currently logged in. `?redirect_uri=<current_path>` will be automatically included so that the user returns to the same place post-login. You can override this behavior by replacing `before_login`.
 
-Create/edit `config/initializers/authrocket.rb` and add:
+    # For example, to force the user to always return to "/manage":
+    def require_login
+      unless current_session
+        redirect_to ar_login_url(redirect_uri: "/manage")
+      end
+    end
 
-```ruby
-AuthRocket::Api.default_login_path = '/manage'
-```
+AuthRocket will verify the domain + path to redirect to. You can configure this at Realm -> Settings -> Connected Apps -> (edit) -> Login URLs. The first URL listed will be the default, so it should generally be the default "just logged in" path.
+
+Paths are validated as "equal or more specific". That is, if Login URLs contains "https://my.app/manage", then any path starting with "/manage" will be allowed, but "/other" will not be allowed. If you want to allow any path at your domain, add "https://my.app/" (since "/" will match any path).
 
 
-#### /login and /logout routes
+#### Logouts
 
-The default routes for login and logout are `/login` and `/logout`, respectively. To override them, add an initializer for AuthRocket (eg: `config/initializers/authrocket.rb`) and add:
+##### The default post-logout path
+
+Upon logout, the user will be returned to the root path ("/").
+
+This default path may be changed using an initializer. Create/edit `config/initializers/authrocket.rb` and add:
+
+    AuthRocket::Api.post_logout_path = '/other'
+
+
+##### /logout route
+
+The default route for logout is `/logout`. To overrideis, add an initializer for AuthRocket (eg: `config/initializers/authrocket.rb`) and add:
 
     AuthRocket::Api.use_default_routes = false
 
 Then add your own routes to `config/routes.rb`:
 
-    get 'mylogin' => 'logins#login'
     get 'mylogout' => 'logins#logout'
 
 
-#### The login controller
+##### The logout action
 
-AuthRocket's default login controller automatically sets up the session (by storing the login token in `session[:ar_token]`) and makes a best effort at returning the user to where they were when the login request was triggered.
+AuthRocket's default login controller automatically sets a logout message using `flash`.
 
-If you require more customization than provided by modifying the default post-login path, as outlined above, you may create your own LoginsController and inherit from AuthRocket's controller:
+You may customize this, or other logout behavior, by creating your own LoginsController and inherit from AuthRocket's controller:
 
     class LoginsController < AuthRocket::ArController
-      def login
-        super
-        if current_session
-          # @redir will be present if the user's previous URL was able to be
-          # saved. If not, then provide a fallback (eg: root_path,
-          # manager_path, etc).
-          redirect_to @redir || dashboard_path
-        end
-        # else if login failed, a redirect to LoginRocket happens automatically
-      end
-
       def logout
         super
-        # Change the path and/or the message.
-        redirect_to root_path, notice: 'You have been logged out.'
+        flash[:notice] = 'You have been logged out.'
       end
     end
 
@@ -199,7 +209,7 @@ AuthRocket also supports Managed Sessions, which enables you to enforce logouts,
       @_current_user ||= AuthRocket::Session.retrieve(session[:ar_token]).try(:user)
     end
 
-For better performance (and to avoid API rate limits), you may want to cache the results of the API call for 3-15 minutes.
+For better performance (and to avoid API rate limits), you will want to cache the results of the API call for 3-15 minutes.
 
 
 #### Initial login

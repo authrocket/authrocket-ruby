@@ -1,20 +1,18 @@
 module AuthRocket::ControllerHelper
   extend ActiveSupport::Concern
 
-  included do
-    if respond_to?(:helper_method)
-      helper_method :current_session
-      helper_method :current_user
-      helper_method :ar_login_url
-      helper_method :ar_signup_url
+  private
+
+  def process_inbound_token
+    # if GET (the only method LR uses), redirect to remove ?token=
+    if request.get? && conditional_login
+      redirect_to safe_this_uri
     end
   end
 
-
-  def require_valid_token
+  def require_login
     unless current_session
-      session[:last_url] = request.get? ? url_for(params.to_unsafe_h.except(:domain, :host, :port, :prototcol, :subdomain, :token)) : url_for
-      redirect_to ar_login_url + "?redir=#{ERB::Util.url_encode(session[:last_url])}"
+      redirect_to ar_login_url(redirect_uri: safe_this_uri)
     end
   end
 
@@ -24,24 +22,76 @@ module AuthRocket::ControllerHelper
   end
 
   def current_user
-    current_session.try(:user)
+    current_session&.user
+  end
+
+  def current_membership
+    # LR always sends a JWT with a single membership/org
+    current_user && current_user.memberships.first
+  end
+
+  def current_org
+    current_membership&.org
   end
 
 
-  def ar_login_url
-    @_login_url = loginrocket_url('login')
+  def ar_account_url(**params)
+    if id = params.delete(:id) || current_org&.id
+      loginrocket_url(path: "/accounts/#{id}", **params)
+    else
+      ar_accounts_url(**params)
+    end
   end
 
-  def ar_signup_url
-    @_signup_url = loginrocket_url('signup')
+  # force - if false/nil, does not add ?force; else does add it
+  def ar_accounts_url(**params)
+    if params[:force] || !params.key?(:force)
+      params[:force] = nil
+    else
+      params.delete(:force)
+    end
+    loginrocket_url(path: '/accounts', **params)
   end
 
-  def loginrocket_url(path=nil)
+  def ar_login_url(**params)
+    loginrocket_url(path: '/login', **params)
+  end
+
+  def ar_logout_url(**params)
+    params[:session] = current_session.id if current_session
+    loginrocket_url(path: '/logout', **params)
+  end
+
+  def ar_profile_url(**params)
+    loginrocket_url(path: '/profile', **params)
+  end
+
+  def ar_signup_url(**params)
+    loginrocket_url(path: '/signup', **params)
+  end
+
+  def loginrocket_url(path: nil, **params)
     raise "Missing env LOGINROCKET_URL or credentials[:loginrocket_url]" if AuthRocket::Api.credentials[:loginrocket_url].blank?
-    s = AuthRocket::Api.credentials[:loginrocket_url].dup
-    s.concat('/') unless s.ends_with?('/')
-    s.concat(path) if path
-    s.freeze
+    uri = Addressable::URI.parse AuthRocket::Api.credentials[:loginrocket_url]
+    uri.path = path if path
+    uri.path = '/' if uri.path.blank?
+    uri.query_values = (uri.query_values||{}).merge(params).stringify_keys if params.present?
+    uri.to_s
+  end
+
+
+  # returns: bool -- whether session was updated/replaced
+  def conditional_login
+    return unless params[:token]
+    if s = AuthRocket::Session.from_token(params[:token])
+      @_current_session = s
+      session[:ar_token] = params[:token]
+      true
+    end
+  end
+
+  def safe_this_uri
+    full_url_for(request.get? ? params.to_unsafe_h.except(:account, :session, :token) : {})
   end
 
 end

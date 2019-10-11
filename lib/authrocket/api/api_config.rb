@@ -48,8 +48,8 @@ module AuthRocket
     mattr_accessor :use_default_routes
     self.use_default_routes = true
 
-    mattr_accessor :default_login_path
-    self.default_login_path = '/'
+    mattr_accessor :post_logout_path
+    self.post_logout_path = '/'
   end
 
 

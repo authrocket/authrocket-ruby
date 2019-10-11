@@ -5,7 +5,11 @@ module AuthRocket
       require_relative 'controller_helper'
 
       ActiveSupport.on_load(:action_controller) do
-        include AuthRocket::ControllerHelper
+        if self == ActionController::Base
+          include AuthRocket::ControllerHelper
+          helper AuthRocket::ControllerHelper
+          before_action :process_inbound_token
+        end
       end
     end
 
