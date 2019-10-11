@@ -11,6 +11,10 @@
   - Rename ENV AUTHROCKET_JWT_SECRET -> AUTHROCKET_JWT_KEY
   - Rename ENV AUTHROCKET_LOGIN_URL -> LOGINROCKET_URL
   - Rename AuthRocket::API.credentials :jwt_secret -> :jwt_key
+- Update ncore to v3
+  - `#errors` is now always an ActiveModel::Errors instance
+  - <exception>#errors is now an ActiveModel::Errors for all applicable exceptions
+- Require Ruby >= 2.3
 
 #### 2.4.0
 

@@ -18,10 +18,10 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.required_ruby_version = '>= 1.9'
+  gem.required_ruby_version = '>= 2.3'
 
-  gem.add_dependency 'ncore', '~> 2.0'
-  gem.add_dependency 'jwt', '~> 1.5.0'
+  gem.add_dependency 'ncore', '>= 3.0.0.a', '< 4'
+  gem.add_dependency 'jwt', '~> 2.1'
 
   gem.add_development_dependency "bundler", "~> 1.3"
   gem.add_development_dependency "rake"
