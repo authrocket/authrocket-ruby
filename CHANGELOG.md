@@ -7,6 +7,10 @@
   - Remove: LoginPolicy, UserToken,
   - Rename: AppHook -> Hook
   - Update most others
+- Update auth/credentials
+  - Rename ENV AUTHROCKET_JWT_SECRET -> AUTHROCKET_JWT_KEY
+  - Rename ENV AUTHROCKET_LOGIN_URL -> LOGINROCKET_URL
+  - Rename AuthRocket::API.credentials :jwt_secret -> :jwt_key
 
 #### 2.4.0
 

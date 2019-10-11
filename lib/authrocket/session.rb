@@ -16,12 +16,12 @@ module AuthRocket
     end
 
 
-    # options - :within - (in seconds) Maximum time since the token was originally issued
-    #         - credentials: {jwt_secret: StringOrKey} - used to verify the token
-    #         - :algo - one of HS256, RS256 (default: auto-detect based on :jwt_secret)
+    # options - :algo   - one of HS256, RS256 (default: auto-detect based on :jwt_key)
+    #         - :within - (in seconds) Maximum time since the token was (re)issued
+    #         - credentials: {jwt_key: StringOrKey} - used to verify the token
     def self.from_token(token, options={})
-      secret = (options[:credentials]||credentials||{})[:jwt_secret]
-      raise Error, "missing :jwt_secret (or AUTHROCKET_JWT_SECRET)" unless secret
+      secret = options.dig(:credentials, :jwt_key) || credentials[:jwt_key]
+      raise Error, "missing :jwt_key (or AUTHROCKET_JWT_KEY)" unless secret
       return unless token
 
       algo = options[:algo]

@@ -14,19 +14,21 @@ module AuthRocket
 
     if ENV['AUTHROCKET_URI']
       self.credentials = parse_credentials ENV['AUTHROCKET_URI']
-    elsif ENV['AUTHROCKET_API_KEY'] || ENV['AUTHROCKET_JWT_SECRET']
+    elsif ENV['AUTHROCKET_API_KEY']
       self.credentials = {
         api_key: ENV['AUTHROCKET_API_KEY'],
-        account: ENV['AUTHROCKET_ACCOUNT'],
         realm:   ENV['AUTHROCKET_REALM'],
-        jwt_secret: ENV['AUTHROCKET_JWT_SECRET']
+        service: ENV['AUTHROCKET_SERVICE'],
       }
     else
       self.credentials = {}
     end
 
-    if ENV['AUTHROCKET_LOGIN_URL']
-      self.credentials[:loginrocket_url] = ENV['AUTHROCKET_LOGIN_URL']
+    if ENV['AUTHROCKET_JWT_KEY']
+      self.credentials[:jwt_key] ||= ENV['AUTHROCKET_JWT_KEY']
+    end
+    if ENV['LOGINROCKET_URL']
+      self.credentials[:loginrocket_url] = ENV['LOGINROCKET_URL']
     end
 
     self.debug = false
@@ -38,9 +40,9 @@ module AuthRocket
 
     self.status_page = 'https://status.authrocket.com/'
 
-    self.auth_header_prefix = 'X-Authrocket'
+    self.auth_header_prefix = 'Authrocket'
 
-    self.credentials_error_message = %Q{Missing API credentials or URL. Set default credentials using "AuthRocket::Api.credentials = {api_key: YOUR_API_KEY, url: AR_REGION_URL}"}
+    self.credentials_error_message = %Q{Missing API credentials or URL. Set default credentials using "AuthRocket::Api.credentials = {api_key: YOUR_API_KEY, url: AR_API_URL}"}
 
 
     mattr_accessor :use_default_routes
@@ -69,13 +71,13 @@ module AuthRocket
           [url.password, url.user].each do |part|
             case part
             when /^jsk_/
-              o[:jwt_secret] = part
-            when /^k(ey|o)_/
+              o[:jwt_key] = part
+            when /^k(ey|s)_/
               o[:api_key] = part
-            when /^org_/
-              o[:account] = part
             when /^rl_/
               o[:realm] = part
+            when /^svc_/
+              o[:service] = part
             end
           end
           url.user = url.password = nil

@@ -37,7 +37,7 @@ module AuthRocket::ControllerHelper
   end
 
   def loginrocket_url(path=nil)
-    raise "Missing env AUTHROCKET_LOGIN_URL or credentials[:loginrocket_url]" if AuthRocket::Api.credentials[:loginrocket_url].blank?
+    raise "Missing env LOGINROCKET_URL or credentials[:loginrocket_url]" if AuthRocket::Api.credentials[:loginrocket_url].blank?
     s = AuthRocket::Api.credentials[:loginrocket_url].dup
     s.concat('/') unless s.ends_with?('/')
     s.concat(path) if path

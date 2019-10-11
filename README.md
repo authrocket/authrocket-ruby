@@ -18,14 +18,14 @@ To your Gemfile, add:
 
 Then ensure the following environment variables are set:
 
-    AUTHROCKET_LOGIN_URL  = https://sample.e1.loginrocket.com/
-    AUTHROCKET_JWT_SECRET = jsk_SAMPLE
+    AUTHROCKET_JWT_KEY = jsk_SAMPLE
+    LOGINROCKET_URL    = https://sample.e2.loginrocket.com/
 
 If you plan to access the AuthRocket API as well, you'll need these variables too:
 
-    AUTHROCKET_API_KEY    = ko_SAMPLE
-    AUTHROCKET_URL        = https://api-e1.authrocket.com/v1
-    AUTHROCKET_REALM      = rl_SAMPLE   # optional
+    AUTHROCKET_API_KEY = ks_SAMPLE
+    AUTHROCKET_URL     = https://api-e2.authrocket.com/v2
+    AUTHROCKET_REALM   = rl_SAMPLE   # optional
     
 Finally, add a `before_action` command to any/all controllers or actions that should require a login.
 
@@ -73,12 +73,12 @@ In your Gemfile, add:
 Then set the following environment variables:
 
     # If accessing the AuthRocket API:
-    AUTHROCKET_API_KEY    = ko_SAMPLE
-    AUTHROCKET_URL        = https://api-e1.authrocket.com/v1 # must match your account's provisioned cluster
-    AUTHROCKET_REALM      = rl_SAMPLE   # optional
+    AUTHROCKET_API_KEY = ks_SAMPLE
+    AUTHROCKET_URL     = https://api-e2.authrocket.com/v2 # must match your account's provisioned cluster
+    AUTHROCKET_REALM   = rl_SAMPLE   # optional
     #
     # If using JWT-verification of AuthRocket's login tokens:
-    AUTHROCKET_JWT_SECRET = jsk_SAMPLE
+    AUTHROCKET_JWT_KEY = jsk_SAMPLE
 
 If you're using either Hosted LoginRocket or authrocket.js to manage logins, see Verifing login tokens below. If you plan to use the API to directly authenticate, see the [API docs](https://authrocket.com/docs/api).
 
@@ -88,30 +88,30 @@ If you're using either Hosted LoginRocket or authrocket.js to manage logins, see
 
 By default, AuthRocket automatically loads credentials from environment variables. This is optimal for any 12-factor deployment. Supported variables are:
 
-`AUTHROCKET_API_KEY = ko_SAMPLE`
+`AUTHROCKET_API_KEY = ks_SAMPLE`
 Your AuthRocket API key. Required to use the API (but not if only performing JWT verification of login tokens).
 
-`AUTHROCKET_JWT_SECRET = jsk_SAMPLE`
+`AUTHROCKET_JWT_KEY = jsk_SAMPLE`
 Used to perform JWT signing verification of login tokens. Not required if validating all tokens using the API instead. This is a realm-specific value, so like `AUTHROCKET_REALM`, set it on a per-use basis if using multiple realms.
-
-`AUTHROCKET_LOGIN_URL = https://sample.e1.loginrocket.com/`
-The LoginRocket URL for your Connected App. Only used by the streamlined Rails integration (for redirects), but still available to use otherwise. If your app uses multiple realms, you'll need to handle this on your own. If you're using a custom domain, this will be that domain and will not contain 'loginrocket.com'.
 
 `AUTHROCKET_REALM = rl_SAMPLE`
 Sets an application-wide default realm ID. If you're using a single realm, this is definitely easiest. Certain multi-tenant apps might using multiple realms. In this case, don't set this globally, but include it as part of the `:credentials` set for each API method.
 
-`AUTHROCKET_URL = https://api-e1.authrocket.com/v1`
-The URL of the AuthRocket API server. This may vary depending on which cluster your account is provisioned on.
+`AUTHROCKET_URL = https://api-e2.authrocket.com/v2`
+The URL of the AuthRocket API server. This may vary depending on which cluster your service is provisioned on.
+
+`LOGINROCKET_URL = https://sample.e2.loginrocket.com/`
+The LoginRocket URL for your Connected App. Only used by the streamlined Rails integration (for redirects), but still available to use otherwise. If your app uses multiple realms, you'll need to handle this on your own. If you're using a custom domain, this will be that domain and will not contain 'loginrocket.com'.
 
 
 It's also possible to configure AuthRocket using a Rails initializer (or other initialization code). 
 
     AuthRocket::Api.credentials = {
-      api_key: 'ko_SAMPLE',
-      jwt_secret: 'jsk_SAMPLE',
-      loginrocket_url: 'https://sample.e1.loginrocket.com/',
+      api_key: 'ks_SAMPLE',
+      jwt_key: 'jsk_SAMPLE',
+      loginrocket_url: 'https://sample.e2.loginrocket.com/',
       realm: 'rl_SAMPLE',
-      url: 'https://api-e1.authrocket.com/v1'
+      url: 'https://api-e2.authrocket.com/v2'
     }
 
 
