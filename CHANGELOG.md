@@ -7,6 +7,7 @@
   - Remove: LoginPolicy, UserToken,
   - Rename: AppHook -> Hook
   - Update most others
+- Support LR JWKS - retrieve RS256 key when key not pre-configured
 - Update auth/credentials
   - Rename ENV AUTHROCKET_JWT_SECRET -> AUTHROCKET_JWT_KEY
   - Rename ENV AUTHROCKET_LOGIN_URL -> LOGINROCKET_URL

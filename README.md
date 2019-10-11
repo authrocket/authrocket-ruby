@@ -92,7 +92,7 @@ By default, AuthRocket automatically loads credentials from environment variable
 Your AuthRocket API key. Required to use the API (but not if only performing JWT verification of login tokens).
 
 `AUTHROCKET_JWT_KEY = jsk_SAMPLE`
-Used to perform JWT signing verification of login tokens. Not required if validating all tokens using the API instead. This is a realm-specific value, so like `AUTHROCKET_REALM`, set it on a per-use basis if using multiple realms.
+Used to perform JWT signing verification of login tokens. Not required if validating all tokens using the API instead. Also not required if LOGINROCKET_URL is set and RS256 keys are being used, as public keys will be auto-retrieved. This is a realm-specific value, so like `AUTHROCKET_REALM`, set it on a per-use basis if using multiple realms.
 
 `AUTHROCKET_REALM = rl_SAMPLE`
 Sets an application-wide default realm ID. If you're using a single realm, this is definitely easiest. Certain multi-tenant apps might using multiple realms. In this case, don't set this globally, but include it as part of the `:credentials` set for each API method.
