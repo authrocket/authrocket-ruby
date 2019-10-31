@@ -26,7 +26,7 @@ module AuthRocket
 
     def invite(attribs={})
       params = parse_request_params(attribs, json_root: json_root).reverse_merge credentials: api_creds
-      parsed, _ = request(:post, url+'/invite', params)
+      parsed, _ = request(:post, resource_path+'/invite', params)
       load(parsed)
       errors.empty? ? self : false
     end

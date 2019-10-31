@@ -35,7 +35,7 @@ module AuthRocket
       # returns: Session || Token
       def authenticate(id, params)
         params = parse_request_params(params, json_root: json_root)
-        parsed, creds = request(:post, "#{url}/#{CGI.escape id}/authenticate", params)
+        parsed, creds = request(:post, "#{resource_path}/#{CGI.escape id}/authenticate", params)
         obj = factory(parsed, creds)
         raise RecordInvalid, obj if obj.errors?
         obj
@@ -45,7 +45,7 @@ module AuthRocket
       # returns: Session
       def authenticate_token(params)
         params = parse_request_params(params, json_root: json_root)
-        parsed, creds = request(:post, "#{url}/authenticate_token", params)
+        parsed, creds = request(:post, "#{resource_path}/authenticate_token", params)
         obj = factory(parsed, creds)
         raise RecordInvalid, obj if obj.errors?
         obj
@@ -54,7 +54,7 @@ module AuthRocket
       # returns: Token
       def generate_password_token(id, params={})
         params = parse_request_params(params)
-        parsed, creds = request(:post, "#{url}/#{CGI.escape id}/generate_password_token", params)
+        parsed, creds = request(:post, "#{resource_path}/#{CGI.escape id}/generate_password_token", params)
         obj = factory(parsed, creds)
         raise RecordInvalid, obj if obj.errors?
         obj
@@ -64,7 +64,7 @@ module AuthRocket
       # returns: Session || Token
       def reset_password_with_token(params)
         params = parse_request_params(params, json_root: json_root)
-        parsed, creds = request(:post, "#{url}/reset_password_with_token", params)
+        parsed, creds = request(:post, "#{resource_path}/reset_password_with_token", params)
         obj = factory(parsed, creds)
         raise RecordInvalid, obj if obj.errors?
         obj
@@ -73,7 +73,7 @@ module AuthRocket
       # returns: Token
       def request_email_verification(id, params={})
         params = parse_request_params(params)
-        parsed, creds = request(:post, "#{url}/#{CGI.escape id}/request_email_verification", params)
+        parsed, creds = request(:post, "#{resource_path}/#{CGI.escape id}/request_email_verification", params)
         obj = factory(parsed, creds)
         raise RecordInvalid, obj if obj.errors?
         obj
@@ -83,7 +83,7 @@ module AuthRocket
       # returns: User
       def verify_email(params)
         params = parse_request_params(params, json_root: json_root)
-        parsed, creds = request(:post, "#{url}/verify_email", params)
+        parsed, creds = request(:post, "#{resource_path}/verify_email", params)
         obj = factory(parsed, creds)
         raise RecordInvalid, obj if obj.errors?
         obj
@@ -95,7 +95,7 @@ module AuthRocket
     # params - {token: '...'}
     def accept_invitation(params)
       params = parse_request_params(params, json_root: json_root).reverse_merge credentials: api_creds
-      parsed, _ = request(:post, "#{url}/accept_invitation", params)
+      parsed, _ = request(:post, "#{resource_path}/accept_invitation", params)
       load(parsed)
       errors.empty? ? self : false
     end
@@ -103,7 +103,7 @@ module AuthRocket
     # params - {current_password: 'old', password: 'new', password_confirmation: 'new'}
     def update_password(params)
       params = parse_request_params(params, json_root: json_root).reverse_merge credentials: api_creds
-      parsed, _ = request(:put, "#{url}/update_password", params)
+      parsed, _ = request(:put, "#{resource_path}/update_password", params)
       load(parsed)
       errors.empty? ? self : false
     end
@@ -111,7 +111,7 @@ module AuthRocket
     # params - {email:, first_name:, last_name:, password:, password_confirmation:, username:}
     def update_profile(params)
       params = parse_request_params(params, json_root: json_root).reverse_merge credentials: api_creds
-      parsed, _ = request(:put, "#{url}/profile", params)
+      parsed, _ = request(:put, "#{resource_path}/profile", params)
       load(parsed)
       errors.empty? ? self : false
     end

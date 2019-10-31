@@ -23,7 +23,7 @@ module AuthRocket
     # always returns a new object; check .errors? or .valid? to see how it went
     def authorize_token(attribs={})
       params = parse_request_params(attribs)
-      parsed, creds = request(:post, url+'/authorize', params)
+      parsed, creds = request(:post, resource_path+'/authorize', params)
       self.class.factory(parsed, creds)
     end
 
@@ -35,7 +35,7 @@ module AuthRocket
       # returns: Array of simplified AuthProviders
       def authorize_urls(attribs={})
         params = parse_request_params(attribs)
-        parsed, creds = request(:get, url+'/authorize', params)
+        parsed, creds = request(:get, resource_path+'/authorize', params)
         raise QueryError, parsed[:errors] if parsed[:errors].any?
         NCore::Collection.new.tap do |coll|
           coll.metadata = parsed[:metadata]
@@ -50,7 +50,7 @@ module AuthRocket
       # returns: simplified AuthProvider
       def authorize_url(auth_provider_id, attribs={})
         params = parse_request_params(attribs)
-        parsed, creds = request(:get, url+"/#{CGI.escape auth_provider_id}/authorize", params)
+        parsed, creds = request(:get, resource_path+"/#{CGI.escape auth_provider_id}/authorize", params)
         raise QueryError, parsed[:errors] if parsed[:errors].any?
         factory(parsed, creds)
       end
@@ -62,7 +62,7 @@ module AuthRocket
       # always returns a new object; check .errors? or .valid? to see how it went
       def authorize(attribs={})
         params = parse_request_params(attribs)
-        parsed, creds = request(:post, url+'/authorize', params)
+        parsed, creds = request(:post, resource_path+'/authorize', params)
         factory(parsed, creds)
       end
 

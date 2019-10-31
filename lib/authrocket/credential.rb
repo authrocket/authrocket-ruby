@@ -21,7 +21,7 @@ module AuthRocket
     # code - required
     def verify(code, attribs={})
       params = parse_request_params(attribs.merge(code: code), json_root: json_root).reverse_merge credentials: api_creds
-      parsed, _ = request(:post, url+'/verify', params)
+      parsed, _ = request(:post, resource_path+'/verify', params)
       load(parsed)
       errors.empty? ? self : false
     end

@@ -36,7 +36,7 @@ module AuthRocket
 
     def reset!(params={})
       params = parse_request_params(params).reverse_merge credentials: api_creds
-      parsed, _ = request(:post, "#{url}/reset", params)
+      parsed, _ = request(:post, "#{resource_path}/reset", params)
       load(parsed)
       errors.empty? ? self : false
     end

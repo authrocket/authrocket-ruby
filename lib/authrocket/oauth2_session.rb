@@ -8,7 +8,7 @@ module AuthRocket
     attr_datetime :expires_at
 
     def self.json_root ; 'session' ; end
-    def self.url ; 'sessions/oauth2' ; end
+    def self.resource_path ; 'sessions/oauth2' ; end
 
     class << self
 
@@ -16,7 +16,7 @@ module AuthRocket
       # returns: Token - must check .valid? or .errors? for response
       def code_to_token(params={})
         params = parse_request_params(params, json_root: json_root)
-        parsed, creds = request(:post, "#{url}/code", params)
+        parsed, creds = request(:post, "#{resource_path}/code", params)
         factory(parsed, creds)
       end
 
