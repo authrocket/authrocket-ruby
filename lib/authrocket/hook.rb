@@ -6,8 +6,8 @@ module AuthRocket
 
     attr :accumulate, :delay, :event_type, :hook_type, :state
     attr :destination
-    attr :email_from, :email_from_name, :email_renderer, :email_subject
-    attr :email_template, :email_to
+    attr :email_renderer, :email_subject, :email_template, :email_to
+
 
     def self.event_types
       %w( invitation.org.created  invitation.org.updated  invitation.org.invited  invitation.org.accepted  invitation.org.expired
@@ -18,6 +18,18 @@ module AuthRocket
           user.created  user.updated  user.deleted
             user.email.verifying  user.email.verified
             user.login.succeeded  user.login.failed  user.login.initiated
+            user.password.resetting  user.password.updated
+            user.profile.updated
+        ).sort
+    end
+
+    def self.email_event_types
+      %w( invitation.org.invited  invitation.org.accepted
+            invitation.referral.invited
+            invitation.request.invited
+          user.created
+            user.email.verifying  user.email.verified
+            user.login.succeeded  user.login.failed
             user.password.resetting  user.password.updated
             user.profile.updated
         ).sort
