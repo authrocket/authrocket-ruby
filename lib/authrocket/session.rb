@@ -66,6 +66,7 @@ module AuthRocket
       end
     end
 
+    # private
     # raises an exception if eligible for retry using different token
     # returns Session on success
     # returns nil on a definitive token-parsed-but-invalid
@@ -100,6 +101,7 @@ module AuthRocket
             Membership.new({
               id: m['mid'],
               permissions: m['perm'],
+              selected: m['selected'],
               user_id: jwt['sub'],
               org_id: m['oid'],
               org: Org.new({
@@ -132,6 +134,7 @@ module AuthRocket
     JWKS_MUTEX = Mutex.new
     MIN_ATTEMPT_WINDOW = 71 # seconds
 
+    # private
     # use_cached - if there is a cached result, use it regardless of last cache load time
     def self.load_jwk_set(uri, use_cached:)
       keys, last_time = @_jwks.dig(uri, :keys), @_jwks.dig(uri, :time)

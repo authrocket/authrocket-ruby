@@ -26,8 +26,10 @@ module AuthRocket::ControllerHelper
   end
 
   def current_membership
-    # LR always sends a JWT with a single membership/org
-    current_user && current_user.memberships.first
+    # LR always sends a JWT with exactly one membership/org
+    # other API generated JWTs may vary
+    return unless current_user
+    current_user.memberships.each{|m| return m if m.selected }.first
   end
 
   def current_org
