@@ -86,7 +86,7 @@ Then set the following environment variables:
     AUTHROCKET_REALM   = rl_SAMPLE   # optional
     #
     # If using JWT-verification of AuthRocket's login tokens:
-    AUTHROCKET_JWT_KEY = jsk_SAMPLE
+    AUTHROCKET_JWT_KEY = SAMPLE
 
 
 
@@ -98,7 +98,7 @@ By default, AuthRocket automatically loads credentials from environment variable
 `AUTHROCKET_API_KEY = ks_SAMPLE`
 Your AuthRocket API key. Required to use the API (but not if only performing JWT verification of login tokens).
 
-`AUTHROCKET_JWT_KEY = jsk_SAMPLE`
+`AUTHROCKET_JWT_KEY = SAMPLE`
 Used to perform JWT signing verification of login tokens. Not required if validating all tokens using the API instead. Also not required if LOGINROCKET_URL is set and RS256 keys are being used, as public keys will be auto-retrieved. This is a realm-specific value, so like `AUTHROCKET_REALM`, set it on a per-use basis if using multiple realms.
 
 `AUTHROCKET_REALM = rl_SAMPLE`
@@ -115,7 +115,7 @@ It's also possible to configure AuthRocket using a Rails initializer (or other i
 
     AuthRocket::Api.credentials = {
       api_key: 'ks_SAMPLE',
-      jwt_key: 'jsk_SAMPLE',
+      jwt_key: 'SAMPLE',
       loginrocket_url: 'https://sample.e2.loginrocket.com/',
       realm: 'rl_SAMPLE',
       url: 'https://api-e2.authrocket.com/v2'
@@ -195,7 +195,7 @@ If you're not using the streamlined Rails integration, you'll need to verify the
 AuthRocket's login tokens use the JWT standard and are cryptographically signed. Verifying the signature is extremely fast. Here's are a couple examples of using this:
 
     def current_user
-      @_current_user ||= AuthRocket::Session.from_token(session[:ar_token]).try(:user)
+      @_current_user ||= AuthRocket::Session.from_token(session[:ar_token])&.user
     end
 
 `from_token` returns `nil` if the token is missing, expired, or otherwise invalid.
@@ -206,7 +206,7 @@ AuthRocket's login tokens use the JWT standard and are cryptographically signed.
 AuthRocket also supports Managed Sessions, which enables you to enforce logouts, even across apps (single sign-out!). In this instance, the session is regularly verified using the AuthRocket API.
 
     def current_user
-      @_current_user ||= AuthRocket::Session.retrieve(session[:ar_token]).try(:user)
+      @_current_user ||= AuthRocket::Session.retrieve(session[:ar_token])&.user
     end
 
 For better performance (and to avoid API rate limits), you will want to cache the results of the API call for 3-15 minutes.
