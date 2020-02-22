@@ -21,7 +21,7 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 2.3'
 
   gem.add_dependency 'addressable', '~> 2.5'
-  gem.add_dependency 'ncore', '>= 3.0.0.a', '< 4'
+  gem.add_dependency 'ncore', '~> 3.0'
   gem.add_dependency 'jwt', '~> 2.1'
 
   gem.add_development_dependency "bundler", "~> 1.3"
