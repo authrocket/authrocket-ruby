@@ -2,6 +2,7 @@
 
 - Automatically handle login tokens in an Authorization header
   eg: Authorization: Bearer {the-token}
+- Optimize LR JWKS support to match by kid
 
 #### 3.0.0
 
