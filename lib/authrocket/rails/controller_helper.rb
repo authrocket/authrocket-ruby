@@ -10,6 +10,14 @@ module AuthRocket::ControllerHelper
     end
   end
 
+  def process_authorization_header
+    if request.headers['authorization'] =~ %r{Bearer (.+)$}i
+      if s = AuthRocket::Session.from_token($1)
+        @_current_session = s
+      end
+    end
+  end
+
   def require_login
     unless current_session
       redirect_to ar_login_url(redirect_uri: safe_this_uri)

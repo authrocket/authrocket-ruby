@@ -9,6 +9,7 @@ module AuthRocket
           include AuthRocket::ControllerHelper
           helper AuthRocket::ControllerHelper
           before_action :process_inbound_token
+          before_action :process_authorization_header
         end
       end
     end

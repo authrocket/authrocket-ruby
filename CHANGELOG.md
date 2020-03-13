@@ -1,3 +1,8 @@
+#### 3.1.0
+
+- Automatically handle login tokens in an Authorization header
+  eg: Authorization: Bearer {the-token}
+
 #### 3.0.0
 
 - NOTE: This version includes breaking changes.

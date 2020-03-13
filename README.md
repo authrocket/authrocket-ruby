@@ -107,7 +107,7 @@ Sets an application-wide default realm ID. If you're using a single realm, this 
 `AUTHROCKET_URL = https://api-e2.authrocket.com/v2`
 The URL of the AuthRocket API server. This may vary depending on which cluster your service is provisioned on.
 
-`LOGINROCKET_URL = https://sample.e2.loginrocket.com/`
+`LOGINROCKET_URL = https://SAMPLE.e2.loginrocket.com/`
 The LoginRocket URL for your Connected App. Used by the streamlined Rails integration (for redirects) and for auto-retrieval of RS256 JWT keys (if AUTHROCKET_JWT_KEY is not set). If your app uses multiple realms, you'll need to handle this on your own. If you're using a custom domain, this will be that domain and will not contain 'loginrocket.com'.
 
 
