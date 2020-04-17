@@ -3,10 +3,12 @@ module AuthRocket
     crud :all, :find, :create, :update, :delete
 
     belongs_to :realm
+    belongs_to :connection
 
     attr :accumulate, :delay, :event_type, :hook_type, :state
     attr :destination
     attr :email_renderer, :email_subject, :email_template, :email_to
+    attr :description, :list_id, :name, :on_create, :visibility
 
 
     def self.event_types

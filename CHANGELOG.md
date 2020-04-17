@@ -1,3 +1,8 @@
+#### 3.2.0
+
+- Add HookState
+- Update Connection, Hook
+
 #### 3.1.0
 
 - Automatically handle login tokens in an Authorization header

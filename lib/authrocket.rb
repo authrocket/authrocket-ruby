@@ -14,6 +14,7 @@ end
   domain
   event
   hook
+  hook_state
   invitation
   jwt_key
   membership

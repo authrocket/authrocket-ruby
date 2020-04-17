@@ -5,6 +5,7 @@ module AuthRocket
     belongs_to :realm
     has_many :credentials
     has_many :events
+    has_many :hook_states
     has_many :memberships
     has_many :sessions
 
