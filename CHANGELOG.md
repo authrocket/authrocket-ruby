@@ -1,3 +1,7 @@
+#### 2.4.1
+
+- Require ncore 2.2.2+
+
 #### 2.4.0
 
 - Add Rails Engine for expedited setup

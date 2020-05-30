@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = '>= 1.9'
 
-  gem.add_dependency 'ncore', '~> 2.0'
+  gem.add_dependency 'ncore', '>= 2.2.2', '< 3'
   gem.add_dependency 'jwt', '~> 1.5.0'
 
   gem.add_development_dependency "bundler", "~> 1.3"
