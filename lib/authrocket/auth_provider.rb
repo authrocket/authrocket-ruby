@@ -5,7 +5,7 @@ module AuthRocket
     belongs_to :realm
 
     attr :name, :provider_type, :state
-    attr :min_complexity, :min_length
+    attr :min_complexity, :min_length, :required_chars
     attr :client_id, :client_secret, :scopes
     attr :loginrocket_domain
     attr :authorization_url, :profile_url, :token_url

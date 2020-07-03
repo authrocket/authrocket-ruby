@@ -1,3 +1,7 @@
+#### 3.2.1
+
+- Update AuthProvider
+
 #### 3.2.0
 
 - Add HookState
@@ -28,6 +32,10 @@
   - `#errors` is now always an ActiveModel::Errors instance
   - <exception>#errors is now an ActiveModel::Errors for all applicable exceptions
 - Require Ruby >= 2.3
+
+#### 2.4.1
+
+- Require ncore 2.2.2+
 
 #### 2.4.0
 
