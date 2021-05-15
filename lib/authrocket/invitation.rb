@@ -7,7 +7,7 @@ module AuthRocket
     belongs_to :realm
     has_many :events
 
-    attr :email, :invitation_type, :token
+    attr :email, :invitation_type, :locale, :token
     attr :permissions
     attr_datetime :created_at, :expires_at, :invited_at
 

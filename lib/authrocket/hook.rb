@@ -7,7 +7,8 @@ module AuthRocket
 
     attr :accumulate, :delay, :event_type, :hook_type, :state
     attr :destination
-    attr :email_renderer, :email_subject, :email_template, :email_to
+    attr :email_renderers, :email_subjects, :email_templates, :email_to, :locales
+    attr :current_locales # readonly
     attr :description, :list_id, :name, :on_create, :visibility
 
 

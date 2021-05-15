@@ -9,7 +9,7 @@ module AuthRocket
     has_many :memberships
     has_many :sessions
 
-    attr :custom, :email, :email_verification, :first_name, :last_name, :name
+    attr :custom, :email, :email_verification, :first_name, :last_name, :locale, :name
     attr :reference, :state, :username
     attr :password, :password_confirmation # writeonly
     attr_datetime :created_at, :last_login_at

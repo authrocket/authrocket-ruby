@@ -16,6 +16,7 @@ module AuthRocket
     has_many :users
 
     attr :custom, :environment, :name, :public_name, :state
+    attr :available_locales, :default_locale
     attr :email_verification, :org_mode, :signup
     attr :name_field, :org_name_field, :password_field, :username_field
     attr :branding, :color_1, :logo, :logo_icon, :privacy_policy, :stylesheet, :terms_of_service

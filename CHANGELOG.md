@@ -1,3 +1,7 @@
+#### 3.3.0
+
+- Update Invitation, Hook, Realm, User
+
 #### 3.2.1
 
 - Update AuthProvider
