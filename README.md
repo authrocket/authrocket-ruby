@@ -206,10 +206,12 @@ AuthRocket's login tokens use the JWT standard and are cryptographically signed.
 AuthRocket also supports Managed Sessions, which enables you to enforce logouts, even across apps (single sign-out!). In this instance, the session is regularly verified using the AuthRocket API.
 
     def current_user
-      @_current_user ||= AuthRocket::Session.retrieve(session[:ar_token])&.user
+      @_current_user ||= AuthRocket::Session.retrieve(session[:ar_token], cache: {expires_in: 15.minutes})&.user
     end
 
 For better performance (and to avoid API rate limits), you will want to cache the results of the API call for 3-15 minutes.
+
+If not using Rails/ActiveSupport, use seconds: `cache: {expires_in: 15*60}` and also configure the cache store, as explained in Caching below. If using Rails, make sure Rails.cache is configured.
 
 
 #### Initial login
@@ -256,6 +258,36 @@ If your app supports multiple locales, then you'll likely want to set the locale
       password: 'secret!',
       headers: {accept_language: 'en'}
     )
+
+
+
+## Caching
+
+The AuthRocket gem is capable of caching the results of GET requests. Since authentication and user data generally needs to be timely, this is opt-in on a per-request basis. The most common use is when validating sessions via the API.
+
+To enable caching, a cache store must be configured. On Rails, `authrocket` automatically uses Rails.cache, so simply ensure that's setup appropriately.
+
+If not using Rails (or if you with to use a different cache store even when using Rails), add this to your AuthRocket initializer:
+
+    cache_options = {} # app specific
+    AuthRocket::Api.cache_store = RedisCacheStore.new(cache_options)
+
+Any Rails-compatible cache store should work.
+
+Next, enable the cache for specific API calls:
+
+    # To avoid caching for too long, it's recommended to set a specific expiration time.
+    AuthRocket::Session.retrieve(token, cache: {expires_in: 5.minutes})
+
+    # However, it's possible to leave out :expires_in and use the cache store's default.
+    # Warning: Ensure the cache store has a default expiration, otherwise cache entries
+    # will last forever!
+    AuthRocket::Session.retrieve(token, cache: {})   # These are identical
+    AuthRocket::Session.retrieve(token, cache: true)
+
+    # All options in cache: {...} are passed directly to the cache store, so anything
+    # supported by your cache store is valid.
+    AuthRocket::Session.retrieve(token, cache: {expires_in: 15.minutes, force: true})
 
 
 

@@ -6,6 +6,10 @@ module AuthRocket
       'AuthRocket::RecordNotFound' => :not_found, # 404
     )
 
+    initializer "authrocket.cache_store" do |app|
+      AuthRocket::Api.cache_store = Rails.cache
+    end
+
     initializer "authrocket.log_runtime" do |app|
       require 'authrocket/api/log_subscriber'
       ActiveSupport.on_load(:action_controller) do
