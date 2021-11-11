@@ -1,6 +1,7 @@
 #### 3.4.0
 
 - Document how to change locales
+- Self-configure rescue_responses when using Rails
 
 #### 3.3.0
 
