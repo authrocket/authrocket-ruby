@@ -24,6 +24,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'ncore', '~> 3.0'
   gem.add_dependency 'jwt', '~> 2.1'
 
-  gem.add_development_dependency "bundler", "~> 1.3"
+  gem.add_development_dependency "bundler"
   gem.add_development_dependency "rake"
 end
