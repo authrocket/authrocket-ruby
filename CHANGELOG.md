@@ -1,3 +1,7 @@
+#### 3.4.0
+
+- Document how to change locales
+
 #### 3.3.0
 
 - Update Invitation, Hook, Realm, User

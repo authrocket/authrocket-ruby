@@ -159,7 +159,7 @@ This default path may be changed using an initializer. Create/edit `config/initi
 
 ##### /logout route
 
-The default route for logout is `/logout`. To overrideis, add an initializer for AuthRocket (eg: `config/initializers/authrocket.rb`) and add:
+The default route for logout is `/logout`. To override it, add an initializer for AuthRocket (eg: `config/initializers/authrocket.rb`) and add:
 
     AuthRocket::Api.use_default_routes = false
 
@@ -226,6 +226,36 @@ Each of the above are designed for ongoing use. The initial login isn't going to
       end
       redirect_to AuthRocket::Api.credentials[:loginrocket_url]
     end
+
+
+
+## Changing locales
+
+The AuthRocket Core API supports multi-locale access. See the AuthRocket docs for the currently supported locales.
+
+If you are using the streamlined Rails integration alongside LoginRocket, it may not be necessary to set the locale for API access. The locale is primarily used for generating localized error messages. This is only useful for API operations that might generate errors. When handling logins and signups via LoginRocket, LoginRocket will handle all of this for you.
+
+When the Accept-Language header is not sent, the AuthRocket Core API uses English.
+
+
+#### Global locale
+
+To set a global locale for your app, add this to your AuthRocket initializer:
+
+    AuthRocket::Api.default_headers.merge!(
+      accept_language: 'en'
+    )
+
+
+#### Per-request locale
+
+If your app supports multiple locales, then you'll likely want to set the locale on a per-request basis. Add a `headers: {accept_language: 'en'}` param to relevant API calls:
+
+    AuthRocket::User.create(
+      email: 'jdoe@example.com',
+      password: 'secret!',
+      headers: {accept_language: 'en'}
+    )
 
 
 
