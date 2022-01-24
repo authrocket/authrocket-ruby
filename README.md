@@ -137,7 +137,7 @@ Likewise, the built-in handler for `before_action :require_login` will automatic
     # For example, to force the user to always return to "/manage":
     def require_login
       unless current_session
-        redirect_to ar_login_url(redirect_uri: "/manage")
+        redirect_to ar_login_url(redirect_uri: "/manage"), allow_other_host: true
       end
     end
 
@@ -226,7 +226,7 @@ Each of the above are designed for ongoing use. The initial login isn't going to
           return
         end
       end
-      redirect_to AuthRocket::Api.credentials[:loginrocket_url]
+      redirect_to AuthRocket::Api.credentials[:loginrocket_url], allow_other_host: true
     end
 
 

@@ -20,7 +20,7 @@ module AuthRocket::ControllerHelper
 
   def require_login
     unless current_session
-      redirect_to ar_login_url(redirect_uri: safe_this_uri)
+      redirect_to ar_login_url(redirect_uri: safe_this_uri), allow_other_host: true
     end
   end
 

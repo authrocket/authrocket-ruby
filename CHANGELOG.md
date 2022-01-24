@@ -1,3 +1,7 @@
+#### (next)
+
+- Rails 7 compatibility
+
 #### 3.4.0
 
 - Document how to change locales

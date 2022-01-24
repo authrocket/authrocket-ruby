@@ -10,9 +10,9 @@ class AuthRocket::ArController < ::ApplicationController
     if AuthRocket::Api.post_logout_path
       uri = Addressable::URI.parse full_url_for
       uri.path = AuthRocket::Api.post_logout_path
-      redirect_to ar_logout_url(redirect_uri: uri.to_s)
+      redirect_to ar_logout_url(redirect_uri: uri.to_s), allow_other_host: true
     else
-      redirect_to ar_logout_url
+      redirect_to ar_logout_url, allow_other_host: true
     end
     # set flash message in the child
 
