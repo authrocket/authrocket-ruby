@@ -1,4 +1,4 @@
-#### (next)
+#### 3.4.1
 
 - Rails 7 compatibility
 
