@@ -102,7 +102,7 @@ Your AuthRocket API key. Required to use the API (but not if only performing JWT
 Used to perform JWT signing verification of login tokens. Not required if validating all tokens using the API instead. Also not required if LOGINROCKET_URL is set and RS256 keys are being used, as public keys will be auto-retrieved. This is a realm-specific value, so like `AUTHROCKET_REALM`, set it on a per-use basis if using multiple realms.
 
 `AUTHROCKET_REALM = rl_SAMPLE`
-Sets an application-wide default realm ID. If you're using a single realm, this is definitely easiest. Certain multi-tenant apps might using multiple realms. In this case, don't set this globally, but include it as part of the `:credentials` set for each API method.
+Sets an application-wide default realm ID. If you're using a single realm, this is definitely easiest. Certain multi-tenant apps might use multiple realms. In this case, don't set this globally, but include it as part of the `:credentials` set for each API method.
 
 `AUTHROCKET_URL = https://api-e2.authrocket.com/v2`
 The URL of the AuthRocket API server. This may vary depending on which cluster your service is provisioned on.
@@ -130,7 +130,7 @@ The built-in Rails integration tries to handle as much for you as possible. Howe
 
 #### Logins
 
-The Rails integration handles logins on any path by detecting the presence of `?token=...`. It will process the login and then immediately redirect back to the same path without `?token=`; this helps prevent browsers and bookmarks from accidentally saving or caching the login token.
+The Rails integration handles logins on any path by detecting the presence of `?token=...`. It will process the login and then immediately redirect back to the same path without `?token=`. This helps prevent browsers and bookmarks from accidentally saving or caching the login token.
 
 Likewise, the built-in handler for `before_action :require_login` will automatically redirect to LoginRocket when the user is not currently logged in. `?redirect_uri=<current_path>` will be automatically included so that the user returns to the same place post-login. You can override this behavior by replacing `before_login`.
 
@@ -141,7 +141,7 @@ Likewise, the built-in handler for `before_action :require_login` will automatic
       end
     end
 
-AuthRocket will verify the domain + path to redirect to. You can configure this at Realm -> Settings -> Connected Apps -> (edit) -> Login URLs. The first URL listed will be the default, so it should generally be the default "just logged in" path.
+AuthRocket will verify the domain + path to redirect to. You can configure this at Realm -> Settings -> Connected Apps -> (edit) -> Login URLs. The first URL listed will be the default, so it should generally match your "just logged in" path.
 
 Paths are validated as "equal or more specific". That is, if Login URLs contains "https://my.app/manage", then any path starting with "/manage" will be allowed, but "/other" will not be allowed. If you want to allow any path at your domain, add "https://my.app/" (since "/" will match any path).
 
@@ -163,7 +163,7 @@ The default route for logout is `/logout`. To override it, add an initializer fo
 
     AuthRocket::Api.use_default_routes = false
 
-Then add your own routes to `config/routes.rb`:
+Then add your own route to `config/routes.rb`:
 
     get 'mylogout' => 'logins#logout'
 
@@ -172,7 +172,7 @@ Then add your own routes to `config/routes.rb`:
 
 AuthRocket's default login controller automatically sets a logout message using `flash`.
 
-You may customize this, or other logout behavior, by creating your own LoginsController and inherit from AuthRocket's controller:
+You may customize this, or other logout behavior, by creating your own LoginsController and inheriting from AuthRocket's controller:
 
     class LoginsController < AuthRocket::ArController
       def logout
@@ -181,18 +181,18 @@ You may customize this, or other logout behavior, by creating your own LoginsCon
       end
     end
 
-If you wish to replace all of the login logic, create a new, different controller that doesn't inherit from `AuthRocket::ArController` (and also override the routes, as per above). You may wish to look at `ArController` as a reference.
+If you wish to replace all of the login logic, create a new controller that doesn't inherit from `AuthRocket::ArController` (and also override the routes, as per above). You may wish to look at `ArController` as a reference.
 
 
 
 ## Verifying login tokens
 
-If you're not using the streamlined Rails integration, you'll need to verify the login tokens (unless you're using the API to authenticate directly).
+If you're not using the streamlined Rails integration, you'll need to verify login tokens on your own (unless you're using the API to authenticate directly).
 
 
 #### JWT verification
 
-AuthRocket's login tokens use the JWT standard and are cryptographically signed. Verifying the signature is extremely fast. Here's are a couple examples of using this:
+AuthRocket's login tokens use the JWT standard and are cryptographically signed. Verifying the signature is extremely fast. Here's an example:
 
     def current_user
       @_current_user ||= AuthRocket::Session.from_token(session[:ar_token])&.user
@@ -211,7 +211,7 @@ AuthRocket also supports Managed Sessions, which enables you to enforce logouts,
 
 For better performance (and to avoid API rate limits), you will want to cache the results of the API call for 3-15 minutes.
 
-If not using Rails/ActiveSupport, use seconds: `cache: {expires_in: 15*60}` and also configure the cache store, as explained in Caching below. If using Rails, make sure Rails.cache is configured.
+If using Rails, `Rails.cache` is used by default. Otherwise, you must configure a cache store for AuthRocket. In either case, see Caching below.
 
 
 #### Initial login
@@ -251,7 +251,7 @@ To set a global locale for your app, add this to your AuthRocket initializer:
 
 #### Per-request locale
 
-If your app supports multiple locales, then you'll likely want to set the locale on a per-request basis. Add a `headers: {accept_language: 'en'}` param to relevant API calls:
+If your app supports multiple locales, then you'll likely want to set the locale on a per-request basis. Add a `headers: {accept_language: 'en'}` argument to relevant API calls:
 
     AuthRocket::User.create(
       email: 'jdoe@example.com',
@@ -267,7 +267,7 @@ The AuthRocket gem is capable of caching the results of GET requests. Since auth
 
 To enable caching, a cache store must be configured. On Rails, `authrocket` automatically uses Rails.cache, so simply ensure that's setup appropriately.
 
-If not using Rails (or if you with to use a different cache store even when using Rails), add this to your AuthRocket initializer:
+If not using Rails (or if you wish to use a different cache store even when using Rails), add this to your AuthRocket initializer:
 
     cache_options = {} # app specific
     AuthRocket::Api.cache_store = RedisCacheStore.new(cache_options)
@@ -291,9 +291,14 @@ Next, enable the cache for specific API calls:
 
 
 
-## Reference
+## Usage
 
-For full details on the AuthRocket API, including examples for Ruby, see our [documentation](https://authrocket.com/docs).
+Documentation is provided on our site:
+
+* [Rails Integration Guide](https://authrocket.com/docs/integration/rails)
+* [Ruby Integration Guide](https://authrocket.com/docs/integration/ruby)
+* [Ruby SDK Docs](https://authrocket.com/docs/sdks/ruby) (Expands on this README)
+* [API Docs with Ruby examples](https://authrocket.com/docs/api#core-api)
 
 
 
