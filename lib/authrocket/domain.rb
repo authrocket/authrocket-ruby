@@ -4,7 +4,7 @@ module AuthRocket
 
     belongs_to :realm
 
-    attr :cert_state, :dns_state, :domain_type, :flags, :fqdn, :state
+    attr :cert_state, :dns_state, :domain_type, :flags, :fqdn, :state, :uri
     attr :subdomain
     attr :domain
 

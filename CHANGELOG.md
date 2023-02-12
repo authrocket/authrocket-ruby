@@ -1,3 +1,7 @@
+#### 3.5.0
+
+- Update Domain, Hook, Invitation, JwtKey, Realm, User
+
 #### 3.4.1
 
 - Rails 7 compatibility

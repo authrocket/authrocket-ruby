@@ -19,6 +19,7 @@ module AuthRocket
     attr :available_locales, :default_locale
     attr :email_verification, :org_mode, :signup
     attr :name_field, :org_name_field, :password_field, :username_field
+    attr :allowed_origins, :lr_features
     attr :branding, :color_1, :logo, :logo_icon, :privacy_policy, :stylesheet, :terms_of_service
     attr :access_token_minutes, :jwt_algo, :jwt_minutes, :jwt_scopes, :session_minutes
     attr :jwt_key # readonly

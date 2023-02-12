@@ -5,7 +5,7 @@ module AuthRocket
     belongs_to :realm
 
     attr :algo, :key, :use
-    attr :expired # readonly
+    attr :flags, :short_key # readonly
 
   end
 end

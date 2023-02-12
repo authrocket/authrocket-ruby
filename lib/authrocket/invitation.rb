@@ -2,6 +2,7 @@ module AuthRocket
   class Invitation < Resource
     crud :all, :find, :create, :update, :delete
 
+    belongs_to :auth_provider
     belongs_to :inviting_user, class_name: 'AuthRocket::User'
     belongs_to :org
     belongs_to :realm
