@@ -18,5 +18,9 @@ module AuthRocket
       end
     end
 
+    initializer "authrocket.logger" do |app|
+      AuthRocket::Api.logger = Rails.logger
+    end
+
   end
 end
