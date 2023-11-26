@@ -1,3 +1,7 @@
+#### 3.5.1
+
+- Change API request header names to lowercase
+
 #### 3.5.0
 
 - Update Domain, Hook, Invitation, JwtKey, Realm, User

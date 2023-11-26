@@ -42,7 +42,7 @@ module AuthRocket
 
     self.status_page = 'https://status.authrocket.com/'
 
-    self.auth_header_prefix = 'Authrocket'
+    self.auth_header_prefix = 'authrocket'
 
     self.credentials_error_message = %Q{Missing API credentials or URL. Set default credentials using "AuthRocket::Api.credentials = {api_key: YOUR_API_KEY, url: AR_API_URL}"}
 
