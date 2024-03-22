@@ -1,3 +1,7 @@
+#### 3.6.0
+
+- Add MailingListProvider, SmtpProvider (replaces Connection)
+
 #### 3.5.1
 
 - Change API request header names to lowercase

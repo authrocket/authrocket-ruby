@@ -9,7 +9,6 @@ end
 %w(
   auth_provider
   client_app
-  connection
   credential
   domain
   event
@@ -17,6 +16,7 @@ end
   hook_state
   invitation
   jwt_key
+  mailing_list_provider
   membership
   named_permission
   notification
@@ -25,6 +25,7 @@ end
   realm
   resource_link
   session
+  smtp_provider
   token
   user
 ).each do |f|

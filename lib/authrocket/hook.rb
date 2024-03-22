@@ -3,7 +3,7 @@ module AuthRocket
     crud :all, :find, :create, :update, :delete
 
     belongs_to :realm
-    belongs_to :connection
+    belongs_to :mailing_list_provider
 
     attr :accumulate, :delay, :event_type, :hook_type, :state
     attr :destination

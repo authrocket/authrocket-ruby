@@ -13,7 +13,7 @@ module AuthRocket
     class << self
 
       # params - {client_app_id:, client_app_secret:, code:}
-      # returns: Token - must check .valid? or .errors? for response
+      # returns: Token - must check .valid? or .errors? on response
       def code_to_token(params={})
         params = parse_request_params(params, json_root: json_root)
         parsed, creds = request(:post, "#{resource_path}/code", params)

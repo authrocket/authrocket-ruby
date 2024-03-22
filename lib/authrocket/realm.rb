@@ -4,15 +4,16 @@ module AuthRocket
 
     has_many :auth_providers
     has_many :client_apps
-    has_many :connections
     has_many :domains
     has_many :events
     has_many :hooks
     has_many :invitations
     has_many :jwt_keys
+    has_many :mailing_list_providers
     has_many :named_permissions
     has_many :orgs
     has_many :resource_links
+    has_many :smtp_providers
     has_many :users
 
     attr :custom, :environment, :name, :public_name, :state
