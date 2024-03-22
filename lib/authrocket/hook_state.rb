@@ -5,7 +5,6 @@ module AuthRocket
     belongs_to :hook
     belongs_to :user
 
-    attr :hook_state_type
     attr :list_state
 
 

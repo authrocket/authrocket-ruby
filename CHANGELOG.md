@@ -1,6 +1,7 @@
 #### 3.6.0
 
 - Add MailingListProvider, SmtpProvider (replaces Connection)
+- Update HookState
 
 #### 3.5.1
 
