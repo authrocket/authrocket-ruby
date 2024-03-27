@@ -13,10 +13,10 @@ end
   domain
   event
   hook
-  hook_state
   invitation
   jwt_key
   mailing_list_provider
+  mailing_list_subscription
   membership
   named_permission
   notification

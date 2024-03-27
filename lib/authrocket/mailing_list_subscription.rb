@@ -1,5 +1,5 @@
 module AuthRocket
-  class HookState < Resource
+  class MailingListSubscription < Resource
     crud :all, :find, :create, :update, :delete
 
     belongs_to :hook
