@@ -4,7 +4,7 @@ module AuthRocket
 
     belongs_to :realm
 
-    attr :connection_name, :provider_type, :state
+    attr :provider_name, :provider_type, :state
     attr :email_from, :email_from_name
     attr :smtp_host, :smtp_password, :smtp_port, :smtp_user
 

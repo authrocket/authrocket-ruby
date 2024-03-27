@@ -4,7 +4,7 @@ module AuthRocket
 
     belongs_to :realm
 
-    attr :connection_name, :provider_type, :state
+    attr :provider_name, :provider_type, :state
     attr :api_endpoint, :provider_account, :valid_list_ids
 
   end
