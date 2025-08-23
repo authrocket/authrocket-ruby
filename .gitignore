@@ -2,6 +2,7 @@
 *.rbc
 .bundle
 .config
+.ruby-*
 .yardoc
 Gemfile.lock
 InstalledFiles
@@ -15,5 +16,3 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
-*.tmproj
-.rvmrc

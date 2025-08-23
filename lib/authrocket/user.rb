@@ -42,7 +42,7 @@ module AuthRocket
         obj
       end
 
-      # params - {token: 'kli:...', code: '000000'}
+      # params - {token: 'tmf:...', code: '000000'}
       # returns: Session
       def authenticate_token(params)
         params = parse_request_params(params, json_root: json_root)
@@ -61,7 +61,7 @@ module AuthRocket
         obj
       end
 
-      # params - {token: '...', password: '...', password_confirmation: '...'}
+      # params - {token: 'tpw:...', password: '...', password_confirmation: '...'}
       # returns: Session || Token
       def reset_password_with_token(params)
         params = parse_request_params(params, json_root: json_root)
@@ -80,7 +80,7 @@ module AuthRocket
         obj
       end
 
-      # params - {token: '...'}
+      # params - {token: 'tve:...'}
       # returns: User
       def verify_email(params)
         params = parse_request_params(params, json_root: json_root)

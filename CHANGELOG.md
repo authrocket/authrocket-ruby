@@ -1,6 +1,7 @@
 #### 3.8.0
 
 - Lazy load ENVs
+- Require Ruby >= 2.7
 
 #### 3.7.0
 
