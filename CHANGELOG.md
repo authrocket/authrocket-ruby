@@ -1,3 +1,7 @@
+#### 3.8.0
+
+- Lazy load ENVs
+
 #### 3.7.0
 
 - Add MailingListSubscription (replaces HookState)

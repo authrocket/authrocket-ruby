@@ -4,7 +4,9 @@ module AuthRocket
   SingletonResource.send :include, AuthRocket::Client
 
   configure do
-    self.default_url = ENV['AUTHROCKET_URL']
+    self.default_url = proc do
+      ENV['AUTHROCKET_URL']
+    end
 
     self.default_headers = {
       accept: 'application/json',
@@ -12,29 +14,29 @@ module AuthRocket
       user_agent: "AuthRocket/ruby v#{VERSION} [nc #{NCore::VERSION}]"
     }
 
-    if ENV['AUTHROCKET_URI']
-      self.credentials = parse_credentials ENV['AUTHROCKET_URI']
-    elsif ENV['AUTHROCKET_API_KEY']
-      self.credentials = {
-        api_key: ENV['AUTHROCKET_API_KEY'],
-        realm:   ENV['AUTHROCKET_REALM'],
-        service: ENV['AUTHROCKET_SERVICE'],
-      }
-    else
-      self.credentials = {}
-    end
-
-    if ENV['AUTHROCKET_JWT_KEY']
-      self.credentials[:jwt_key] ||= ENV['AUTHROCKET_JWT_KEY']
-    end
-    if ENV['LOGINROCKET_URL']
-      self.credentials[:loginrocket_url] = ENV['LOGINROCKET_URL']
+    self.credentials = proc do
+      c = if ENV['AUTHROCKET_URI']
+        parse_credentials ENV['AUTHROCKET_URI']
+      elsif ENV['AUTHROCKET_API_KEY']
+        { api_key: ENV['AUTHROCKET_API_KEY'],
+          realm:   ENV['AUTHROCKET_REALM'],
+          service: ENV['AUTHROCKET_SERVICE'],
+        }
+      else
+        {}
+      end
+      if ENV['AUTHROCKET_JWT_KEY']
+        c[:jwt_key] ||= ENV['AUTHROCKET_JWT_KEY']
+      end
+      if ENV['LOGINROCKET_URL']
+        c[:loginrocket_url] = ENV['LOGINROCKET_URL']
+      end
+      c
     end
 
     self.debug = false
 
     self.strict_attributes = true
-
 
     self.i18n_scope = :authrocket
 
