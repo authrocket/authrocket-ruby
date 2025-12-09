@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'addressable', '~> 2.5'
   spec.add_dependency 'ncore', '~> 3.10'
-  spec.add_dependency 'jwt', '~> 2.1'
+  spec.add_dependency 'jwt', '~> 3.1'
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"

@@ -1,3 +1,7 @@
+#### 3.9.0
+
+- Bump to jwt 3.1
+
 #### 3.8.0
 
 - Lazy load ENVs
