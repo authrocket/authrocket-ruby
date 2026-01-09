@@ -11,7 +11,7 @@ module AuthRocket
 
     attr :custom, :email, :email_pending, :email_verification, :first_name, :last_name
     attr :locale, :name, :reference, :state, :username
-    attr :password, :password_confirmation # writeonly
+    attr :keep_sessions, :password, :password_confirmation # writeonly
     attr_datetime :created_at, :last_login_at
 
 

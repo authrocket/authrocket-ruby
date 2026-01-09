@@ -10,8 +10,8 @@ module AuthRocket
     belongs_to :user
     has_many :notifications
 
-    attr :event_type, :token
-    attr_datetime :event_at
+    attr :event_type, :session_id, :token
+    attr_datetime :event_at, :expires_at
 
     def request_data
       self[:request]

@@ -1,3 +1,7 @@
+#### 3.10.0
+
+- Update Event, Hook, User
+
 #### 3.9.0
 
 - Bump to jwt 3.1

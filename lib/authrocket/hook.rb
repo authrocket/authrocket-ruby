@@ -19,6 +19,7 @@ module AuthRocket
           invitation.request.created  invitation.request.updated  invitation.request.invited  invitation.request.accepted  invitation.request.expired
           membership.created  membership.updated  membership.deleted
           org.created  org.updated  org.closed
+          session.deleted
           user.created  user.updated  user.deleted
             user.email.updating  user.email.verifying  user.email.verified
             user.login.succeeded  user.login.failed  user.login.initiated
