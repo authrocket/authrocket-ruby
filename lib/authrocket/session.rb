@@ -44,7 +44,7 @@ module AuthRocket
 
       base_params = {token: token, within: options[:within], local_creds: options[:credentials]}
       if jwks_eligible
-        kid = JSON.parse(JWT::Base64.url_decode(token.split('.')[0]))['kid'] rescue nil
+        kid = json_coder.parse(JWT::Base64.url_decode(token.split('.')[0]))['kid'] rescue nil
         return if kid.blank?
 
         load_jwk_set(lr_url) unless @_jwks[kid]

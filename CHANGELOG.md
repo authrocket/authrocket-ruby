@@ -1,3 +1,7 @@
+#### 3.11.0
+
+- Use ncore's new json coder
+
 #### 3.10.0
 
 - Update Event, Hook, User

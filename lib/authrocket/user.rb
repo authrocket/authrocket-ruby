@@ -80,7 +80,7 @@ module AuthRocket
         obj
       end
 
-      # params - {token: 'tve:...'}
+      # params - {token: '(tve|tue):...'}
       # returns: User
       def verify_email(params)
         params = parse_request_params(params, json_root: json_root)
