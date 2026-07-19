@@ -15,6 +15,7 @@ module AuthRocket
     attr_datetime :created_at, :last_login_at
 
 
+    undef_method :credentials
     def credentials
       reload unless @attribs[:credentials]
       @attribs[:credentials]

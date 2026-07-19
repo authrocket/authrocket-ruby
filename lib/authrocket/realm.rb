@@ -26,11 +26,13 @@ module AuthRocket
     attr :jwt_key # readonly
 
 
+    undef_method :named_permissions
     def named_permissions
       reload unless @attribs[:named_permissions]
       @attribs[:named_permissions]
     end
 
+    undef_method :resource_links
     def resource_links
       reload unless @attribs[:resource_links]
       @attribs[:resource_links]

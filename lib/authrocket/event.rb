@@ -8,7 +8,7 @@ module AuthRocket
     belongs_to :org
     belongs_to :realm
     belongs_to :user
-    has_many :notifications
+    # has_many :notifications
 
     attr :event_type, :session_id, :token
     attr_datetime :event_at, :expires_at

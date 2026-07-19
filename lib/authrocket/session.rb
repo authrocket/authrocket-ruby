@@ -49,7 +49,7 @@ module AuthRocket
 
         load_jwk_set(lr_url) unless @_jwks[kid]
         if key_set = @_jwks[kid]
-          parse_jwt **key_set, **base_params
+          parse_jwt(**key_set, **base_params)
         end
       else
         parse_jwt secret: secret, algo: algo, **base_params

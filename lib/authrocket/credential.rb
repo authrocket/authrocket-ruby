@@ -14,6 +14,7 @@ module AuthRocket
     attr :client_app_name, :approved_scopes
 
 
+    undef_method :provisioning_svg
     def provisioning_svg
       self[:provisioning_svg]&.html_safe
     end
